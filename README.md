@@ -1,30 +1,14 @@
 # **ComputorV1: A Polynomial Equation Solver**
 
-Welcome to **ComputorV1**, a project aimed at implementing a robust and efficient polynomial equation solver in **Rust**. This tool will help solve linear, quadratic, cubic, and quartic polynomial equations, making it a valuable addition to any developer's toolkit for mathematical computing.
-
-Follow along to see how to implement and extend this project, with detailed guidance on program design, error handling, and testing. By the end, you’ll have built your own powerful polynomial solver, while also learning advanced techniques for higher-degree equations.
-
----
-
-### **Project Status**
-- [x] Naming and structuring the documentation
-- [ ] Rewrite the first text because I will not push my source code to the public repository but only my unit tests
-- [ ] Implementing a linear polynomials solver
-- [ ] Implementing quadratic polynomials (via the quadratic formula)
-- [ ] Solving cubic and quartic polynomials (advanced algorithms)
-
 ---
 
 ## **Table of Contents**
 1. [Introduction](#1---introduction)
-2. [Dive Into Polynomial Solvers: Why They Matter](#2---dive-into-polynomial-solvers-why-they-matter)
-3. [Get Set Up for Success: Environment Setup](#3---get-set-up-for-success-environment-setup)
-4. [Break It Till You Make It: Testing for Perfection](#4---break-it-till-you-make-it-testing-for-perfection)
-5. [Your First Polynomial Solver: Step-by-Step](#5---your-first-polynomial-solver-step-by-step)
-6. [Existing Algorithms for Higher Degree Polynomials](#6---existing-algorithms-for-higher-degree-polynomials)
-7. [Crafting a Robust Program Design](#7---crafting-a-robust-program-design)
-8. [Conquer the Chaos: Mastering Error Handling](#8---conquer-the-chaos-mastering-error-handling)
-9. [Next Steps: Where to Go From Here](#9---next-steps-where-to-go-from-here)
+2. [Solving linear and quadratic equations](#2---solving-linear-and-quadratic-equations)
+3. [Existing Algorithms for Higher Degree Polynomials](#5---existing-algorithms-for-higher-degree-polynomials)
+4. [Crafting a Robust Program Design](#6---crafting-a-robust-program-design)
+5. [Conquer the Chaos: Mastering Error Handling](#7---conquer-the-chaos-mastering-error-handling)
+6. [Next Steps: Where to Go From Here](#8---next-steps-where-to-go-from-here)
 
 ---
 
@@ -32,41 +16,22 @@ Follow along to see how to implement and extend this project, with detailed guid
 
 In this project, we will build a **polynomial equation solver** that can handle equations of varying degrees (from linear to quartic). Polynomials are fundamental structures in both mathematics and programming, and solving them efficiently can serve as a building block for more advanced algorithms.
 
-You'll learn how to:
-- Implement different solving techniques based on polynomial degree
-- Design the solver using **Rust**, with an emphasis on performance and memory safety
-- Handle errors gracefully, ensuring a smooth user experience
-
----
-
-## **2 - Dive Into Polynomial Solvers: Why They Matter**
-
-Before diving into the implementation, let’s explore the **importance of polynomials** in computational contexts:
-- **What is a Polynomial?** A polynomial is a mathematical function consisting of variables and coefficients, often used to model real-world problems.
-- **Why Polynomials Matter in Programming:** From physics simulations to machine learning, polynomials are used to represent relationships and predict outcomes, making them essential to many fields in software development.
-
----
-
-## **3 - Get Set Up for Success: Environment Setup**
-
-Let’s set up the environment to get started with coding in **Rust**:
-- **Why Rust?** We chose Rust for its memory safety, performance, and expressive type system, which is perfect for building reliable and efficient solvers.
-- **Setting Up Rust:**
-    - Install Rust using `rustup`: [Rust Installation Guide](https://www.rust-lang.org/learn/get-started)
-    - Familiarize yourself with **Cargo**, Rust’s package manager and build system.
-
----
-
-## **4 - Break It Till You Make It: Testing for Perfection**
-
-Testing is a core part of building a reliable solver. In this section, we’ll write unit tests to ensure that each part of our polynomial solver works as expected:
-- **Writing Tests in Rust:** Learn how to use Rust’s built-in testing framework.
-- **Debugging Through Testing:** Discover how testing helps uncover bugs and edge cases in your code.
+- **Language:** We chose Rust for its memory safety, performance, and expressive type system, which is perfect for building reliable and efficient solvers.
 - **Approach:** We'll adopt a **Test-Driven Development (TDD)** approach, where we write tests before implementing the solver functions.
 
----
 
-## **5 - Your First Polynomial Solver: Step-by-Step**
+## **2 - Solving linear and quadratic equations**
+
+Let's start by handling the simpler cases. Linear equations are of the form `ax + b = 0` represented as follows on a graph: 
+
+### Linear Equation Graph
+
+![Linear Equation Graph](assets/linear_equation.gif)
+
+As shown in the graph above, there is only one case when a linear equation has zero solution, and it is when a is equal to zero.
+Otherwise, we can determine the value of x for which y will be null using the following logic:
+
+
 
 In this section, you’ll build your first polynomial solver for **linear** and **quadratic** equations:
 - **Linear Solver:** Implementing a solver for equations of the form `ax + b = 0`.
@@ -76,7 +41,7 @@ Each step will include explanations of the underlying mathematical principles, a
 
 ---
 
-## **6 - Existing Algorithms for Higher Degree Polynomials**
+## **5 - Existing Algorithms for Higher Degree Polynomials**
 
 Once the basics are covered, we’ll move to more advanced algorithms for solving **cubic and quartic** equations:
 - **Analytical Approach**:
@@ -92,7 +57,7 @@ This section dives into how these algorithms work and provides Rust implementati
 
 ---
 
-## **7 - Crafting a Robust Program Design**
+## **6 - Crafting a Robust Program Design**
 
 This section focuses on creating a robust, scalable design for the solver:
 - **Data Structures:** How to represent polynomials and their coefficients effectively in Rust.
@@ -101,7 +66,7 @@ This section focuses on creating a robust, scalable design for the solver:
 
 ---
 
-## **8 - Conquer the Chaos: Mastering Error Handling**
+## **7 - Conquer the Chaos: Mastering Error Handling**
 
 A good solver must handle all potential errors gracefully. In this section, we’ll tackle:
 - **Parsing Errors:** How to manage invalid input or malformed equations.
@@ -111,7 +76,7 @@ This section will walk you through best practices for error handling, making you
 
 ---
 
-## **9 - Next Steps: Where to Go From Here**
+## **8 - Next Steps: Where to Go From Here**
 
 Once you’ve mastered solving polynomial equations, you can take this project even further:
 - **Polynomial Operations:** Implement support for operations like addition, subtraction, multiplication, and division of polynomials.
@@ -122,13 +87,11 @@ Explore additional resources and continue growing your knowledge!
 
 ---
 
-### **Contributing**
-
-Interested in improving this project or adding new features? Contributions are welcome! Feel free to open issues or submit pull requests. Let’s make this solver even better together.
-
----
-
-### **Acknowledgments**
-
-A special thanks to the Rust community for their support and contributions to the open-source ecosystem, making it easier for developers to create powerful, safe, and efficient programs.
-
+### **Project Status**
+- [x] Naming and structuring the documentation
+- [ ] Rewrite the first text because I will not push my source code to the public repository but only my unit tests
+- [ ] Implementing a linear polynomials solver
+- [ ] Implementing quadratic polynomials (via the quadratic formula)
+- [ ] Solving cubic and quartic polynomials (advanced algorithms)
+- [ ] Lint the code with clippy
+- [ ] use Rustfmt to properly format your rust code
