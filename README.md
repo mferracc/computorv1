@@ -24,12 +24,13 @@ In this project, we will build a **polynomial equation solver** that can handle 
 
 Let's start by handling the simpler cases. Linear equations are of the form `ax + b = 0` represented as follows on a graph: 
 
-### Linear Equation Graph
+### *Linear Equation Graph: y = ax + b*
 
-![Linear Equation Graph](assets/linear_equation.gif)
-
-As shown in the graph above, there is only one case when a linear equation has zero solution, and it is when a is equal to zero.
-Otherwise, we can determine the value of x for which y will be null using the following logic:
+<div align="center">
+  <img src="assets/linear_equation.gif" alt="Linear Equation Graph Demo">
+</div>
+As shown in the graph above, there is only one case when a linear equation has zero solution, and it is when 'a' is equal to zero.
+Otherwise, we can determine the value of 'x' for which y will be null using the following logic:
 
 
 
