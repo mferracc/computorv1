@@ -17,8 +17,8 @@
 
 In this project, we will build a **polynomial equation solver** that can handle equations of varying degrees (from linear to quartic). Polynomials are fundamental structures in both mathematics and programming, and solving them efficiently can serve as a building block for more advanced algorithms.
 
-- **Language:** We chose **[Rust](https://doc.rust-lang.org/book/title-page.html)** for its memory safety, performance, and expressive type system, which is perfect for building reliable and efficient solvers.
-- **Approach:** We'll adopt a **[Test-Driven Development (TDD)](https://en.wikipedia.org/wiki/Test-driven_development)** approach, where we write tests before implementing the solver functions.
+- **Language:** We chose [Rust](https://doc.rust-lang.org/book/title-page.html) for its memory safety, performance, and expressive type system, which is perfect for building reliable and efficient solvers.
+- **Approach:** We'll adopt a [Test-Driven Development (TDD)](https://en.wikipedia.org/wiki/Test-driven_development) approach, where we write tests before implementing the solver functions.
 ---
 
 ## **2 - Solving linear equations**
@@ -108,12 +108,10 @@ pub fn solve_linear(a: f64, b: f64) -> Option<f64> {
 }
 ```
 
-This function takes `a` and `b` as inputs and returns either `Some(x)` if it finds a solution, or `None` if there isn’t one (when `a` is zero).
-Clean and simple, right?
-
 Once you have implemented the function, try running the tests using `cargo test` in the terminal.
 If everything is working as expected, all the tests will pass! If you see any failures, no problem - it's just a chance
 to make your code even better! Tweak things until tests goes green, and enjoy the process You've got this!
+
 ---
 
 ## **3 - Quadratic Solver**
