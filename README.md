@@ -36,9 +36,6 @@ Linear equations are of the form `ax + b = 0` represented as follows on a graph:
   <img src="assets/linear_equation.gif" alt="Linear Equation Graph Demo">
 </div>
 
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
-
 As shown in the graph above, there is only one case when a linear equation has zero solution: when `a` is equal to zero.
 Otherwise, we can determine the value of `x` for which `y` will be `null` using the following formula:
 
