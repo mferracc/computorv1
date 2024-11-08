@@ -110,7 +110,7 @@ pub fn solve_linear(a: f64, b: f64) -> Option<f64> {
 
 Once you have implemented the function, try running the tests using `cargo test` in the terminal.
 If everything is working as expected, all the tests will pass! If you see any failures, no problem - it's just a chance
-to make your code even better! Tweak things until tests goes green, and enjoy the process You've got this!
+to make your code even better! Tweak things until tests goes green, and enjoy the process. You've got this!
 
 ---
 
@@ -167,9 +167,7 @@ Explore additional resources and continue growing your knowledge!
 ---
 
 ### **Project Status**
-- [x] Naming and structuring the documentation
-- [ ] Rewrite the first text because I will not push my source code to the public repository but only my unit tests
-- [ ] Implementing a linear polynomials solver
+- [x] Implementing a linear polynomials solver
 - [ ] Implementing quadratic polynomials (via the quadratic formula)
 - [ ] Solving cubic and quartic polynomials (advanced algorithms)
 - [ ] Lint the code with clippy
