@@ -1,3 +1,3 @@
 pub mod solvers;
+pub mod math_tools;
 
-pub use solvers::linear::solve_linear;
