@@ -1,14 +1,12 @@
-# **A Program To Solve Polynomial Equations**
-What if a small rounding error could derail an entire computation?
-This project dives into the subtle and surprisingly tricky task of solving polynomial equations, where precision, performance, and algorithmic elegance converge.
+# **Solving Polynomial Equations**
 
 ---
 
 ## **Table of Contents**
 1. [Introduction](#1---introduction)
-2. [Experience TDD By Building A Linear Solver](#2---experience-tdd-by-building-a-linear-solver)
-3. [Solving Quadratic Equation Might Be More Complex Than You Imagine](#3---solving-quadratic-equation-might-be-more-complex-than-you-imagine)
-4. [Solving cubic equations using Cardano's formula]()
+2. [Linear Solver](#2---linear-solver)
+3. [Quadratic Solver](#3---quadratic-solver)
+4. [Cubic Solver Using Cardano's Formula](#4---cubic-solver-using-cardanos-formula)
 5. [Ferrari's method for quartics]()
 6. [Can we solve higher degrees polynomials? The Abel-Ruffini Theorem]()
 7. [The guessing approach: Newton-Raphson Method]()
@@ -20,26 +18,15 @@ This project dives into the subtle and surprisingly tricky task of solving polyn
 
 ## **1 - Introduction**
 
-This project isn’t just about solving equations—it’s about tackling one of the trickiest and most essential challenges in math and programming.
-Polynomials show up everywhere—from physics to computer graphics to machine learning—and having a way to solve them that’s both efficient and reliable is a game-changer.
-But as you’ll see, it’s not just about plugging numbers into formulas.
+This project is about building a **polynomial equation solver** that can handle everything from linear equations to quartics.
+The Abel Ruffini theorem states that there is no general solution for polynomials of higher-degree.
+However, by pushing the limits, we might just find ways to tackle even higher-degree equations.
 
-Our goal is to build a **polynomial equation solver** that can handle everything from the humble linear equations to the more complex quartics—and who says we have to stop there?
-By pushing the limits, we might just find ways to tackle even higher-degree equations.
-And we’re doing it the right way, with a strong focus on **precision**, **performance**, and **Test-Driven Development (TDD)**.
-
-We will be using Rust all along, because its memory safety, blazing speed, and powerful type system make it perfect for this challenge.
-Plus, Rust’s testing tools make TDD not just possible, but actually enjoyable.
-
-Each chapter will introduce a core programming concept that you will get to put directly into practice.
-By the end, we will have built not only a powerful polynomial solver but also a toolkit of algorithms and programming techniques useful for future projects.
-
-But enough talking. We've got plenty to build, so let’s get started!
+We will be using Rust all along, and use Rust's powerful testing tools all along to follow a Test Driven Development approach.
 
 ---
 
-## **2 - Experience TDD By Building A Linear Solver**
-#### Concept: Test-Driven Development (TDD) and Unit Testing
+## **2 - Linear Solver**
 
 In TDD we first define the expected behaviour of a function using tests before we even write the function itself.
 This way, we have a clear set of criteria for what our code needs to achieve.
@@ -129,14 +116,12 @@ pub fn solve_linear(a: f64, b: f64) -> Option<f64> {
 }
 ```
 
-Once you have implemented the function, try running the tests using `cargo test` in the terminal.
-If everything is working as expected, all the tests will pass! If you see any failures, no problem - it's just a chance
-to make your code even better! Tweak things until tests go green, and enjoy the process. You've got this!
+Once we have implemented the function, we can run the tests using `cargo test` in the terminal.
+If everything is working as expected, all the tests will pass!
 
 ---
 
-## **3 - Solving Quadratic Equation Might Be more Complex Than You Imagine**
-### Concept: Floating-Point Arithmetic and Precision
+## **3 - Quadratic Solver**
 
 Now that we're done with linear equation, let's move on [Quadratic](https://en.wikipedia.org/wiki/Quadratic_equation).
 Quadratic equations are of the form `ax^2 + bx + c = 0`, and their graphic representation is called a `parabola`.
@@ -167,52 +152,89 @@ Note that in the case of a single solution, the discriminant ∆ will be null an
   <img src="https://latex.codecogs.com/svg.image?\inline&space;\LARGE&space;{\color{White}x_{0}=\frac{-b}{2a}}">
 </div>
 
-Now you might be thinking, “Great, let's just use this formula in our code and compute the values directly!”
-But hold on-there's a tiny detail you're overlooking.
-And this seemingly tiny detail can make a huge difference in your results.
+We will be using an enum to represent the 3 different outcomes for the quadratic equation.
+The enum QuadraticSolution holds the 3 types of solutions possible, and we will use it as a return type for our solve_quadratic function.
 
-When performing operations like `b^2 - 4ac` or `square_root(∆)`, we're dealing with [floating-point numbers](https://www.validlab.com/goldberg/paper.pdf).
-And unfortunately, floating-point arithmetic can introduce small errors due how numbers are represented in computers.
-These errors might accumulate and affect the accuracy of your final result.
-
-In scientific computing, or any situation where precision is crucial, even the smallest inaccuracies can significantly affect the final result—leading to costly errors or even catastrophic failures, such as in aerospace or engineering systems.
-
-////////////////////////////////////////////////////////////
-
--> solve the equation using the strict mathematical method for calculating the solution
--> test with crates
--> underline the unefficiency of the method (link to the [paper](http://i.stanford.edu/pub/cstr/reports/cs/tr/66/40/CS-TR-66-40.pdf)
--> find a better way to solve the equation in a cs way to avoid floating points errors due to approximation
--> danger of floating points arithmetic on the accuracy of solving a quadratic equation (rounding error)
-
-``` text
-We want a quadratic equation solver that will accept any floatingpoint 
-numbers a, b, c, and compute any of the roots xl9 x2 that lie safely 
-within the range of floating-point numbers.
-
-Any computed root should have an error in the last decimal place not 
-exceeding, say, 10 units.
-
-If either x1 or x2 underflows, or overflows, there should be a message
-about what happened.
-
-Such an algorithm has been devised by William Kahan of the University
-of Toronto.
+```rust
+pub enum QuadraticSolution {
+    NoRealSolution,
+    OneRealSolution(f64),
+    TwoRealSolutions(f64, f64),
+}
 ```
-[What every computer scientist should know about floating point arithmetic](https://www.validlab.com/goldberg/paper.pdf)
 
-[Kahan summation algorithm](https://en.wikipedia.org/wiki/Kahan_summation_algorithm)
+We can now continue by writing the unit tests for the `solve_quadratic` function.
 
-[Kahan algo in python](https://chrisjameswalker.com/2022/01/28/kahans-summation-algorithm/)
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
 
+    #[test]
+    fn test_no_solution() {
+        let solution: QuadraticSolution = solve_quadratic(1.0, 0.0, 1.0);
+        assert!(matches!(solution, QuadraticSolution::NoRealSolution));
+    }
+
+    #[test]
+    fn test_one_solution() {
+        let solution: QuadraticSolution = solve_quadratic(1.0, -2.0, 1.0);
+        if let QuadraticSolution::OneRealSolution(x) = solution {
+            assert_eq!(x, 1.0);
+        } else {
+            panic!("Expected one real solution.");
+        }
+    }
+
+    #[test]
+    fn test_two_solutions() {
+        let solution: QuadraticSolution = solve_quadratic(1.0, -3.0, 2.0);
+        if let  QuadraticSolution::TwoRealSolutions(x1, x2) = solution {
+            assert_eq!(x1, 1.0);
+            assert_eq!(x2, 2.0);
+        } else {
+            panic!("Expected two real solutions");
+        }
+    }
+
+    #[test]
+    #[should_panic(expected = "Coefficient 'a' cannot be 0 in a quadratic equation. Use a linear solver.")]
+    fn test_panic_on_zero_a() {
+        solve_quadratic(0.0, 2.0, 1.0);
+    }
+}
+```
+Now that we have the tests, we continue by implementing `solve_quadratic`.
+
+```rust
+pub fn solve_quadratic(a: f64, b: f64, c: f64) -> QuadraticSolution {
+    if a == 0.0 {
+        panic!("Coefficient 'a' cannot be 0 in a quadratic equation. Use a linear solver.")
+    }
+
+    let delta: f64 = b * b - (4.0 * a * c);
+    if delta < 0.0 {
+        return QuadraticSolution::NoRealSolution;
+    }
+
+    let sqrt_delta: f64 = basic::square_root(delta).unwrap();
+
+    let x1: f64 = (-b - sqrt_delta) / (2.0 * a);
+    let x2: f64 = (-b + sqrt_delta) / (2.0 * a);
+
+    if delta == 0.0 {
+        return QuadraticSolution::OneRealSolution(x1);
+    }
+    return QuadraticSolution::TwoRealSolutions(x1, x2);
+}
+```
 
 ---
 
+## **4 - Cubic Solver Using Cardano's Formula**
 
-Solving Quadratic Equations Might Be More Complex Than You Imagine
 
-Concept: Floating-Point Arithmetic and Precision
-Highlight the challenges of floating-point arithmetic, especially in cases where slight inaccuracies can lead to incorrect roots. This chapter can also introduce handling numerical instability and discuss methods like Kahan summation to reduce errors.
+
 
 Solving Cubic Equations Using Cardano's Formula
 Concept: Recursive Functions
