@@ -1,32 +1,37 @@
-# **ComputorV1: A Polynomial Equation Solver**
+# **Solving Polynomial Equations**
 
 ---
 
 ## **Table of Contents**
 1. [Introduction](#1---introduction)
-2. [Solving Linear Equations](#2---solving-linear-equations)
+2. [Linear Solver](#2---linear-solver)
 3. [Quadratic Solver](#3---quadratic-solver)
-4. [Existing Algorithms for Higher Degree Polynomials](#5---existing-algorithms-for-higher-degree-polynomials)
-5. [Crafting a Robust Program Design](#6---crafting-a-robust-program-design)
-6. [Conquer the Chaos: Mastering Error Handling](#7---conquer-the-chaos-mastering-error-handling)
-7. [Next Steps: Where to Go From Here](#8---next-steps-where-to-go-from-here)
+4. [Cubic Solver Using Cardano's Formula](#4---cubic-solver-using-cardanos-formula)
+5. [Ferrari's method for quartics]()
+6. [Can we solve higher degrees polynomials? The Abel-Ruffini Theorem]()
+7. [The guessing approach: Newton-Raphson Method]()
+8. [Finding all the roots at the same time with the Durand-Kerner Method]()
+9. [Last but not least: The Bairstow's Method]()
+10. [Conclusion]()
 
 ---
 
 ## **1 - Introduction**
 
-In this project, we will build a **polynomial equation solver** that can handle equations of varying degrees (from linear to quartic). Polynomials are fundamental structures in both mathematics and programming, and solving them efficiently can serve as a building block for more advanced algorithms.
+This project is about building a **polynomial equation solver** that can handle everything from linear equations to quartics.
+The Abel Ruffini theorem states that there is no general solution for polynomials of higher-degree.
+However, by pushing the limits, we might just find ways to tackle even higher-degree equations.
 
-- **Language:** We chose [Rust](https://doc.rust-lang.org/book/title-page.html) for its memory safety, performance, and expressive type system, which is perfect for building reliable and efficient solvers.
-- **Approach:** We'll adopt a [Test-Driven Development (TDD)](https://en.wikipedia.org/wiki/Test-driven_development) approach, where we write tests before implementing the solver functions.
+We will be using Rust all along, and use Rust's powerful testing tools all along to follow a Test Driven Development approach.
+
 ---
 
-## **2 - Solving linear equations**
+## **2 - Linear Solver**
 
 In TDD we first define the expected behaviour of a function using tests before we even write the function itself.
 This way, we have a clear set of criteria for what our code needs to achieve.
 
-Let's start by handling the simpler cases, like linear equations.
+Let's start by handling the simpler cases, like [linear equations](https://en.wikipedia.org/wiki/Linear_equation).
 
 Linear equations are of the form `ax + b = 0` represented as follows on a graph: 
 
@@ -43,24 +48,27 @@ Otherwise, we can determine the value of `x` for which `y` will be `null` using 
   <img src="https://latex.codecogs.com/svg.image?\inline&space;\LARGE&space;{\color{White}\mathbf{x=-\frac{b}{a}}}">
 </div>
 
-Now we will start with TDD by writing tests for this function.
+We will start now our [Test Driven Development](https://en.wikipedia.org/wiki/Test-driven_development) journey by writing tests for this function.
 We are placing this tests in a module below the function definition.
-Rust makes testing easy with its built-in test framework, so you can quickly check that your code works just the way you expect!
 
 Here’s a quick look at the main tools we’ll use to write tests:
 
-- **#[cfg(test)]:** Used to marks a module, so it only gets compiled when running tests, but is ignored by the compiler when building the project.
-- **#[test]:** Used to mark a function as a test case.
-- **assert_eq!:** A macro used to compare what we expect our function to return with what it actually returns. If they don’t match, the test fails.
-
-Below is the test module with tests for the future `solve_linear` function.
+- **#[cfg(test)]:** marks a test module, so it only gets compiled when running tests, but is ignored by the compiler when building the project.
+- **#[test]:** marks a function as a test case.
+- **assert_eq!:** macro used to compare what we expect our function to return with what it actually returns, and fails the test if they don’t match.
 
 Since a linear equation of the form  `ax + b = 0` may or may not have a valid solution, it's a great place to use Rust's [`Option`](https://doc.rust-lang.org/book/ch06-01-defining-an-enum.html#the-option-enum-and-its-advantages-over-null-values) type.
 The `solve_linear` function will wrap the value `x` in `Some(x)` when a valid solution exists, or return `None` if there is no solution (for example when `a` is zero).
 
+With that being said, we can write our first unit tests for the future `solve_linear` function.
+
 Notice that we are writing these tests first before the actual function definition.
 
 ```rust
+pub fn solve_linear(a: f64, b: f64) -> Option<f64> {
+  unimplemented!()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -108,69 +116,146 @@ pub fn solve_linear(a: f64, b: f64) -> Option<f64> {
 }
 ```
 
-Once you have implemented the function, try running the tests using `cargo test` in the terminal.
-If everything is working as expected, all the tests will pass! If you see any failures, no problem - it's just a chance
-to make your code even better! Tweak things until tests goes green, and enjoy the process You've got this!
+Once we have implemented the function, we can run the tests using `cargo test` in the terminal.
+If everything is working as expected, all the tests will pass!
 
 ---
 
 ## **3 - Quadratic Solver**
 
-- **Quadratic Solver:** Using the **quadratic formula** to solve equations of the form `ax^2 + bx + c = 0`.
+Now that we're done with linear equation, let's move on [Quadratic](https://en.wikipedia.org/wiki/Quadratic_equation).
+Quadratic equations are of the form `ax^2 + bx + c = 0`, and their graphic representation is called a `parabola`.
+
+<div align="center">
+  <h3><i>Quadratic Equation Parabola: y = ax^2 + bx + c</i></h3>
+  <img src="assets/quadratic_equation.gif" alt="Linear Equation Graph Demo">
+</div>
+
+We can solve this type of equation in two steps. First we calculate its `discriminant` ∆ (“delta”):
+
+<div align="center">
+  <img src="https://latex.codecogs.com/svg.image?\inline&space;\LARGE&space;{\color{White}\Delta=b^{2}-4ac}">
+</div>
+
+Then, if the discriminant `∆ ≥ 0`, the equation has one or two real solutions.
+The solutions are calculated as:
+
+<div align="center">
+  <img src="https://latex.codecogs.com/svg.image?\inline&space;\LARGE&space;{\color{White}x_{1}=\frac{-b-\sqrt{\Delta}}{2a}}" style="margin-right: 20px;">
+  <img src="https://latex.codecogs.com/svg.image?\inline&space;\LARGE&space;{\color{White}and}" style="margin-right: 20px;">
+  <img src="https://latex.codecogs.com/svg.image?\inline&space;\LARGE&space;{\color{White}x_{2}=\frac{-b&plus;\sqrt{\Delta}}{2a}}">
+</div>
+
+Note that in the case of a single solution, the discriminant ∆ will be null and the unique solution can be expressed as:
+
+<div align="center">
+  <img src="https://latex.codecogs.com/svg.image?\inline&space;\LARGE&space;{\color{White}x_{0}=\frac{-b}{2a}}">
+</div>
+
+We will be using an enum to represent the 3 different outcomes for the quadratic equation.
+The enum QuadraticSolution holds the 3 types of solutions possible, and we will use it as a return type for our solve_quadratic function.
+
+```rust
+pub enum QuadraticSolution {
+    NoRealSolution,
+    OneRealSolution(f64),
+    TwoRealSolutions(f64, f64),
+}
+```
+
+We can now continue by writing the unit tests for the `solve_quadratic` function.
+
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_no_solution() {
+        let solution: QuadraticSolution = solve_quadratic(1.0, 0.0, 1.0);
+        assert!(matches!(solution, QuadraticSolution::NoRealSolution));
+    }
+
+    #[test]
+    fn test_one_solution() {
+        let solution: QuadraticSolution = solve_quadratic(1.0, -2.0, 1.0);
+        if let QuadraticSolution::OneRealSolution(x) = solution {
+            assert_eq!(x, 1.0);
+        } else {
+            panic!("Expected one real solution.");
+        }
+    }
+
+    #[test]
+    fn test_two_solutions() {
+        let solution: QuadraticSolution = solve_quadratic(1.0, -3.0, 2.0);
+        if let  QuadraticSolution::TwoRealSolutions(x1, x2) = solution {
+            assert_eq!(x1, 1.0);
+            assert_eq!(x2, 2.0);
+        } else {
+            panic!("Expected two real solutions");
+        }
+    }
+
+    #[test]
+    #[should_panic(expected = "Coefficient 'a' cannot be 0 in a quadratic equation. Use a linear solver.")]
+    fn test_panic_on_zero_a() {
+        solve_quadratic(0.0, 2.0, 1.0);
+    }
+}
+```
+Now that we have the tests, we continue by implementing `solve_quadratic`.
+
+```rust
+pub fn solve_quadratic(a: f64, b: f64, c: f64) -> QuadraticSolution {
+    if a == 0.0 {
+        panic!("Coefficient 'a' cannot be 0 in a quadratic equation. Use a linear solver.")
+    }
+
+    let delta: f64 = b * b - (4.0 * a * c);
+    if delta < 0.0 {
+        return QuadraticSolution::NoRealSolution;
+    }
+
+    let sqrt_delta: f64 = basic::square_root(delta).unwrap();
+
+    let x1: f64 = (-b - sqrt_delta) / (2.0 * a);
+    let x2: f64 = (-b + sqrt_delta) / (2.0 * a);
+
+    if delta == 0.0 {
+        return QuadraticSolution::OneRealSolution(x1);
+    }
+    return QuadraticSolution::TwoRealSolutions(x1, x2);
+}
+```
 
 ---
 
-## **5 - Existing Algorithms for Higher Degree Polynomials**
+## **4 - Cubic Solver Using Cardano's Formula**
 
-Once the basics are covered, we’ll move to more advanced algorithms for solving **cubic and quartic** equations:
-- **Analytical Approach**:
-    - **Derivatives**: By finding the derivative of a polynomial, we can identify critical points, inflection points, and make predictions about the behavior of the function. While this doesn’t solve the polynomial directly, it provides insights for more efficient numerical methods.
-    - **Root Refinement**: Derivatives can be used alongside root-finding algorithms to refine the accuracy of potential solutions. We’ll show how to calculate derivatives programmatically in Rust to support root-finding algorithms.
 
-- **Numerical Methods**:
-    - **Newton’s Method**: Iterative method to approximate roots.
-    - **Durand-Kerner Method**: A complex, but effective algorithm for solving polynomials of higher degrees.
-    - **Newton-Raphson Algorithm**: Commonly used for finding successively better approximations to the roots.
 
-This section dives into how these algorithms work and provides Rust implementations.
 
----
+Solving Cubic Equations Using Cardano's Formula
+Concept: Recursive Functions
+Introduce recursion, which can be particularly useful for polynomial decompositions or parts of Cardano's formula. Use this opportunity to discuss when recursion is efficient and when it can lead to stack overflow or performance issues.
 
-## **6 - Crafting a Robust Program Design**
+Ferrari's Method for Quartics
+Concept: Algorithm Complexity and Optimization
+Ferrari's method is more complex, so this is a great place to introduce algorithm complexity. Explain Big O notation in practical terms and discuss why more efficient algorithms matter when computations get heavier.
 
-This section focuses on creating a robust, scalable design for the solver:
-- **Data Structures:** How to represent polynomials and their coefficients effectively in Rust.
-- **Modular Design:** Break down the solver into reusable, maintainable components.
-- **Performance Considerations:** Optimizing memory usage and execution speed to handle large polynomials efficiently.
+Can We Solve Higher-Degree Polynomials? The Abel-Ruffini Theorem
+Concept: Limits of Computability and Theoretical Constraints
+Since the Abel-Ruffini theorem states that certain polynomials can’t be solved with radicals, introduce the idea of computational limits. Discuss how some problems have theoretical constraints that require alternative approaches like approximations or iterative methods.
 
----
+The Guessing Approach: Newton-Raphson Method 
+Concept: Iterative Methods and Convergence
+Newton-Raphson is a classic iterative approach, so explain iterative methods and convergence criteria. This is a great place to discuss convergence speed, accuracy, and stopping conditions in iterative algorithms.
 
-## **7 - Conquer the Chaos: Mastering Error Handling**
+Finding All the Roots at the Same Time with the Durand-Kerner Method
+Concept: Parallelism and Concurrent Computing
+Durand-Kerner involves finding multiple roots simultaneously, which is a good context for introducing parallelism. Discuss how concurrent computing could be applied here and what it could mean for performance.
 
-A good solver must handle all potential errors gracefully. In this section, we’ll tackle:
-- **Parsing Errors:** How to manage invalid input or malformed equations.
-- **No Solution or Complex Solutions:** Handling cases where no real solution exists (e.g., complex roots) by leveraging Rust’s `Result` and `Option` types.
-
-This section will walk you through best practices for error handling, making your program more reliable and user-friendly.
-
----
-
-## **8 - Next Steps: Where to Go From Here**
-
-Once you’ve mastered solving polynomial equations, you can take this project even further:
-- **Polynomial Operations:** Implement support for operations like addition, subtraction, multiplication, and division of polynomials.
-- **Graphing Polynomial Functions:** Visualize solutions graphically using Rust libraries.
-- **Extending to Systems of Equations:** Tackle more complex mathematical problems by extending your solver to handle systems of polynomial equations.
-
-Explore additional resources and continue growing your knowledge!
-
----
-
-### **Project Status**
-- [x] Naming and structuring the documentation
-- [ ] Rewrite the first text because I will not push my source code to the public repository but only my unit tests
-- [ ] Implementing a linear polynomials solver
-- [ ] Implementing quadratic polynomials (via the quadratic formula)
-- [ ] Solving cubic and quartic polynomials (advanced algorithms)
-- [ ] Lint the code with clippy
-- [ ] use Rustfmt to properly format your rust code
+Last but Not Least: The Bairstow's Method
+Concept: Error Handling and Robustness in Numerical Methods
+Introduce robust error handling strategies and the importance of handling edge cases in numerical methods. This could also be a good place to introduce Rust’s Result type for error handling.
