@@ -1,41 +1,47 @@
+use crate::constants::{ INVALID_ARG_NUMBER };
+use crate::math_tools::fixed_point::FixedPoint;
+
 pub mod solvers;
 pub mod math_tools;
+pub mod constants;
+pub mod parser;
+
 
 pub struct Polynomial {
-    degree: u8,
-    coefficients: Vec<f64>,
-    discriminant: Some(f64),
-    solutions: Vec<f64>,
+    degree: usize,
+    coefficients: Vec<FixedPoint>,
+    discriminant: Option<FixedPoint>,
+    solutions: Option<Vec<FixedPoint>>,
 }
 
+
 impl Polynomial {
-    pub fn build(args: &[String]) -> Result<Polynomial, &'static str> {
-        if args.len() < 2 {
-            return Err("wrong usage");
+    pub fn new(args: &[String]) -> Result<Self, String> {
+        if args.len() != 2 {
+            return Err(INVALID_ARG_NUMBER.to_string());
         }
 
-        let degree: u8 = 0;
-        let coefficients: Vec<f64> = Vec::new();
-        let discriminant: Some(f64) = None;
-        let solutions: Vec<f64> = Vec::new();
+        let coefficients: Vec<FixedPoint> = parser::parse_input(&args[1])?;
+        let degree: usize = coefficients.len() - 1;
 
         Ok(Polynomial {
             degree,
             coefficients,
-            discriminant, // calc later
-            solutions, // calc later
+            discriminant: None,
+            solutions: None,
         })
     }
 
-    pub fn solve() {
+    pub fn solve(&self) {
         unimplemented!();
         // calc ∆ and solutions
     }
 
-    pub fn display_result(self) {
+    pub fn display_result(&self) {
         println!("Reduced form: ");
         //println!("Polynomial degree: {}", self::degree)
         println!("Discriminant is ...blablabla..., the two solutions are:");
         println!("les solutions");
     }
+
 }
