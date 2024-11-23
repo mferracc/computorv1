@@ -1,6 +1,5 @@
 /// Compute the value of the square root using the Babylonian method (or Newton method).
-pub fn square_root(value: f64) -> Option<f64>
-{
+pub fn square_root(value: f64) -> Option<f64> {
     if value < 0.0 {
         return None;
     } else if value == 0.0 {

@@ -55,7 +55,7 @@ pub fn solve_quadratic(a: f64, b: f64, c: f64) -> QuadraticSolution {
     if delta == 0.0 {
         return QuadraticSolution::OneRealSolution(x1);
     }
-    return QuadraticSolution::TwoRealSolutions(x1, x2);
+    QuadraticSolution::TwoRealSolutions(x1, x2)
 }
 
 #[cfg(test)]
@@ -81,7 +81,7 @@ mod tests {
     #[test]
     fn test_two_solutions() {
         let solution: QuadraticSolution = solve_quadratic(1.0, -3.0, 2.0);
-        if let  QuadraticSolution::TwoRealSolutions(x1, x2) = solution {
+        if let QuadraticSolution::TwoRealSolutions(x1, x2) = solution {
             assert_eq!(x1, 1.0);
             assert_eq!(x2, 2.0);
         } else {
@@ -90,7 +90,9 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "Coefficient 'a' cannot be 0 in a quadratic equation. Use a linear solver.")]
+    #[should_panic(
+        expected = "Coefficient 'a' cannot be 0 in a quadratic equation. Use a linear solver."
+    )]
     fn test_panic_on_zero_a() {
         solve_quadratic(0.0, 2.0, 1.0);
     }
@@ -111,7 +113,11 @@ mod tests {
         let solution: QuadraticSolution = solve_quadratic(1e8, -1e10, 1e8);
         if let QuadraticSolution::TwoRealSolutions(x1, x2) = solution {
             let tolerance = 1e-6 * 1e8;
-            assert!((x1 - 1.0000001).abs() < tolerance, "x1 is imprecise: {}", x1);
+            assert!(
+                (x1 - 1.0000001).abs() < tolerance,
+                "x1 is imprecise: {}",
+                x1
+            );
             assert!((x2 - 9.999999).abs() < tolerance, "x2 is imprecise: {}", x2);
         } else {
             panic!("Expected two real solutions for large coefficients.");
@@ -122,7 +128,7 @@ mod tests {
     fn test_precision_issue() {
         let solution: QuadraticSolution = solve_quadratic(1.0, -4.0, 3.9999999);
 
-        if let QuadraticSolution::TwoRealSolutions(x1, x2) = solution {
+        if let QuadraticSolution::TwoRealSolutions(x1, _x2) = solution {
             assert!((x1 - (2.0003163)).abs() < 1e4, "x1 is imprecise: {}", x1);
         } else {
             panic!("Expected two real solutions.");
