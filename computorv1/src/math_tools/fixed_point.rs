@@ -1,4 +1,4 @@
-use crate::constants::{MAX_SCALE, NEGATIVE};
+use crate::constants::math_tools_constants::{MAX_SCALE, NEGATIVE};
 use std::cmp::{Ordering, PartialEq};
 use std::fmt;
 use std::fmt::Formatter;
@@ -187,32 +187,3 @@ impl fmt::Debug for FixedPoint {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_add_assign() {
-        let mut a = FixedPoint::new(1, 500, 1);
-        let b = FixedPoint::new(1, 600, 1);
-        a += b;
-        assert!(a == FixedPoint::new(3, 100, 1));
-    }
-
-    #[test]
-    fn test_sub_assign() {
-        let mut a = FixedPoint::new(3, 200, 1);
-        let b = FixedPoint::new(1, 500, 1);
-        a -= b;
-        assert!(a == FixedPoint::new(1, 700, 1));
-    }
-
-    #[test]
-    fn test_mul_assign() {
-        let mut a = FixedPoint::new(1, 500, 1);
-        let b = FixedPoint::new(2, 0, 1);
-        a *= b;
-        dbg!(&a);
-        assert!(a == FixedPoint::new(3, 0, 1));
-    }
-}

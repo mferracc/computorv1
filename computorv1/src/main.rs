@@ -1,15 +1,13 @@
-use computorv1::Polynomial;
 use std::{env, process};
+use computorv1::math_tools::polynomial::Polynomial;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let _polynomial: Polynomial = Polynomial::new(&args).unwrap_or_else(|err: String| {
+    let polynomial: Polynomial = Polynomial::new(&args).unwrap_or_else(|err: String| {
         println!("Error: {err}.");
         process::exit(1);
     });
 
-    dbg!(args);
-
-    // polynomial::solve;
-    // polynomial::display_result;
+    polynomial.solve();
+    polynomial.display_result();
 }
