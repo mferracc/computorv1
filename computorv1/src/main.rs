@@ -3,7 +3,7 @@ use computorv1::math_tools::polynomial::Polynomial;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let polynomial: Polynomial = Polynomial::new(&args).unwrap_or_else(|err: String| {
+    let mut polynomial: Polynomial = Polynomial::new(&args).unwrap_or_else(|err: String| {
         println!("Error: {err}.");
         process::exit(1);
     });

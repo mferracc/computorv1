@@ -1,12 +1,18 @@
 use crate::constants::parsing_constants::INVALID_ARG_NUMBER;
 use crate::math_tools::fixed_point::FixedPoint;
 use crate::parser;
+use crate::solvers::bigger_degree::solve_bigger_degree;
+use crate::solvers::const_polynomial::solve_const;
+use crate::solvers::cubic::solve_cubic;
+use crate::solvers::linear::solve_linear;
+use crate::solvers::quadratic::solve_quadratic;
+use crate::solvers::quartic::solve_quartic;
 
 pub struct Polynomial {
-    degree: usize,
-    coefficients: Vec<FixedPoint>,
-    discriminant: Option<FixedPoint>,
-    solutions: Option<Vec<FixedPoint>>,
+    pub degree: usize,
+    pub coefficients: Vec<FixedPoint>,
+    pub discriminant: Option<FixedPoint>,
+    pub solutions: Option<Vec<FixedPoint>>,
 }
 
 impl Polynomial {
@@ -26,8 +32,15 @@ impl Polynomial {
         })
     }
 
-    pub fn solve(&self) {
-        // calc ∆ and solutions
+    pub fn solve(&mut self) {
+        match self.degree {
+            0 => solve_const(self),
+            1 => solve_linear(self),
+            2 => solve_quadratic(self),
+            3 => solve_cubic(self),
+            4 => solve_quartic(self),
+            _ => solve_bigger_degree(self),
+        }
     }
 
     pub fn display_result(&self) {
@@ -47,7 +60,7 @@ impl Polynomial {
             if value != 0.0 {
                 let mut term: String = format!("{}", value);
                 if index > 0 {
-                    term.push_str(" * X");
+                    term.push_str("*X");
                     if index > 1 {
                         term.push('^');
                         term.push_str(&index.to_string());
@@ -65,10 +78,17 @@ impl Polynomial {
     }
 
     fn display_discriminant(&self) {
-        println!(
-            "Discriminant is {:?}, the two solutions are:",
-            self.discriminant
-        );
+        if !self.discriminant.is_none() {
+            print!(
+                "Discriminant is {:?}",
+                self.discriminant
+            );
+            if !self.solutions.is_none() {
+                println!(", the two solutions are:");
+            } else {
+                println!(", no solutions.");
+            }
+        }
     }
 
     fn display_solutions(&self) {
