@@ -39,9 +39,10 @@ impl Polynomial {
 
     pub fn display_result(&self) {
         println!("Reduced form: ");
-        //println!("Polynomial degree: {}", self::degree)
-        println!("Discriminant is ...blablabla..., the two solutions are:");
-        println!("les solutions");
+        println!("Polynomial degree: {}", self.degree);
+        println!("Discriminant is {:?}, the two solutions are:", self.discriminant);
+        println!("Solutions: {:?}", self.solutions);
+
     }
 
 }

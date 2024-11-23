@@ -122,7 +122,7 @@ mod tests {
     fn test_precision_issue() {
         let solution: QuadraticSolution = solve_quadratic(1.0, -4.0, 3.9999999);
 
-        if let QuadraticSolution::TwoRealSolutions(x1, x2) = solution {
+        if let QuadraticSolution::TwoRealSolutions(x1, _x2) = solution {
             assert!((x1 - (2.0003163)).abs() < 1e4, "x1 is imprecise: {}", x1);
         } else {
             panic!("Expected two real solutions.");

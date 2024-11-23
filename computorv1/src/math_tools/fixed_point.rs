@@ -1,4 +1,4 @@
-use std::ops::{Add, Sub, Mul, Div, AddAssign, SubAssign, MulAssign, DivAssign};
+use std::ops::{Add, Sub, Mul, AddAssign, SubAssign, MulAssign};
 use std::cmp::PartialEq;
 use std::fmt;
 use std::fmt::Formatter;
@@ -141,7 +141,6 @@ impl AddAssign for FixedPoint {
 
 impl SubAssign for FixedPoint {
     fn sub_assign(&mut self, other: Self) {
-        let (self_scaled, other_scaled) = Self::scale_to_match(self, &other);
 
         let other = FixedPoint::new(other.integer, other.decimal, -other.sign);
         *self += other;
