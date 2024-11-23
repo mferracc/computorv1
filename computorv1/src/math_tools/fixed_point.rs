@@ -1,5 +1,5 @@
 use std::ops::{Add, Sub, Mul, AddAssign, SubAssign, MulAssign};
-use std::cmp::PartialEq;
+use std::cmp::{PartialEq, Ordering};
 use std::fmt;
 use std::fmt::Formatter;
 use crate::constants::{MAX_SCALE, NEGATIVE};
@@ -41,30 +41,32 @@ impl FixedPoint {
     /// Private part
 
     fn scale_to_match(a: &FixedPoint, b: &FixedPoint) -> (FixedPoint, FixedPoint) {
-        if a.scale == b.scale {
-            (a.clone(), b.clone())
-        } else if a.scale < b.scale {
-            let scale_factor = b.scale / a.scale;
-            (
-                FixedPoint {
-                    integer: a.integer,
-                    decimal: a.decimal * scale_factor,
-                    sign: a.sign,
-                    scale: b.scale,
-                },
-                b.clone()
-            )
-        } else {
-            let scale_factor = a.scale / b.scale;
-            (
-                a.clone(),
-                FixedPoint {
-                    integer: b.integer,
-                    decimal: b.decimal * scale_factor,
-                    sign: b.sign,
-                    scale: a.scale,
-                }
-            )
+        match a.scale.cmp(&b.scale) {
+            Ordering::Equal => (a.clone(), b.clone()),
+            Ordering::Less => {
+                let scale_factor = b.scale / a.scale;
+                (
+                    FixedPoint {
+                        integer: a.integer,
+                        decimal: a.decimal * scale_factor,
+                        sign: a.sign,
+                        scale: b.scale,
+                    },
+                    b.clone()
+                )
+            },
+            Ordering::Greater => {
+                let scale_factor = a.scale / b.scale;
+                (
+                    a.clone(),
+                    FixedPoint {
+                        integer: b.integer,
+                        decimal: b.decimal * scale_factor,
+                        sign: b.sign,
+                        scale: a.scale,
+                    }
+                )
+            }
         }
     }
 

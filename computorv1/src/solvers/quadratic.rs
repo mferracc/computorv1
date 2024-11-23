@@ -55,7 +55,7 @@ pub fn solve_quadratic(a: f64, b: f64, c: f64) -> QuadraticSolution {
     if delta == 0.0 {
         return QuadraticSolution::OneRealSolution(x1);
     }
-    return QuadraticSolution::TwoRealSolutions(x1, x2);
+    QuadraticSolution::TwoRealSolutions(x1, x2)
 }
 
 #[cfg(test)]

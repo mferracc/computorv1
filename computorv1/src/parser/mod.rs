@@ -36,17 +36,17 @@ fn sum_coefficients(
     let degree = left.keys().chain(right.keys()).copied().max().unwrap_or(0);
     let mut coefficients: Vec<FixedPoint> = vec![FixedPoint::new(0,0, POSITIVE);degree + 1];
 
-    for (&power, &ref coeff) in &left {
+    for (&power, coeff) in &left {
         coefficients[power] = coeff.clone();
     }
-    for (&power, &ref coeff) in &right {
+    for (&power, coeff) in &right {
         coefficients[power] -= coeff.clone();
     }
 
     coefficients
 }
 
-fn parse_equation(input: &String) -> Result<HashMap<usize, FixedPoint>, String> {
+fn parse_equation(input: &str) -> Result<HashMap<usize, FixedPoint>, String> {
     let terms: Vec<String> = split_inclusive(input);
     let mut coefficients: HashMap<usize, FixedPoint> = HashMap::new();
 
@@ -108,7 +108,7 @@ fn split_term(signed_term: &str) -> Result<(usize, FixedPoint), String> {
 }
 
 fn get_coeff_sign(term: &str) -> Option<i64> {
-    match term.as_bytes().get(0) {
+    match term.as_bytes().first() {
         Some(b'-') => Some(-1),
         Some(b'+') => Some(1),
         _ => None
@@ -120,8 +120,8 @@ fn extract_power(power: &str) -> Result<usize, String> {
         Ok(0)
     } else if power == "X" {
         Ok(1)
-    } else if power.starts_with("X^") {
-        power[2..]
+    } else if let Some(stripped) = power.strip_prefix("X^") {
+        stripped
             .parse::<usize>()
             .map_err(|_| format!("{}{}", INVALID_POWER, power))
     } else {
@@ -132,7 +132,7 @@ fn extract_power(power: &str) -> Result<usize, String> {
 fn extract_coefficient(coefficient: &str, sign: i64) -> Result<FixedPoint, String> {
     let fixed_parts: (&str, &str) = coefficient
         .split_once('.')
-        .unwrap_or((&coefficient, "0"));
+        .unwrap_or((coefficient, "0"));
 
     let integer_part: i64 = fixed_parts.0
         .parse::<i64>()
