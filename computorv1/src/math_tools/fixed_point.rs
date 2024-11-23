@@ -98,7 +98,7 @@ impl Add for FixedPoint {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self::Output {
-        let mut result = self.clone();
+        let mut result = self;
         result += rhs;
         result
     }
@@ -108,7 +108,7 @@ impl Sub for FixedPoint {
     type Output = Self;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        let mut result: Self = self.clone();
+        let mut result: Self = self;
         result -= rhs;
         result
     }
@@ -118,7 +118,7 @@ impl Mul for FixedPoint {
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self::Output {
-        let mut result: Self = self.clone();
+        let mut result: Self = self;
         result *= rhs;
         result
     }

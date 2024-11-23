@@ -16,7 +16,7 @@ pub fn parse_input(input: &str) -> Result<Vec<FixedPoint>, String> {
 /// Private part
 
 fn split_input(input: &str) -> Result<(String, String), String> {
-    let cleaned_input: String = input.replace(" ", "");
+    let cleaned_input: String = input.replace(' ', "");
 
     let (left, right) = cleaned_input
         .split_once('=')
@@ -34,7 +34,7 @@ fn sum_coefficients(
     right: HashMap<usize, FixedPoint>,
 ) -> Vec<FixedPoint> {
     let degree = left.keys().chain(right.keys()).copied().max().unwrap_or(0);
-    let mut coefficients: Vec<FixedPoint> = vec![FixedPoint::new(0, 0, POSITIVE);degree + 1];
+    let mut coefficients: Vec<FixedPoint> = vec![FixedPoint::new(0, 0, POSITIVE); degree + 1];
 
     for (&power, coeff) in &left {
         coefficients[power] = coeff.clone();
@@ -55,7 +55,7 @@ fn parse_equation(input: &str) -> Result<HashMap<usize, FixedPoint>, String> {
         coefficients
             .entry(power)
             .and_modify(|c| *c += coefficient.clone())
-            .or_insert(coefficient.clone());
+            .or_insert_with(|| coefficient.clone());
     }
 
     Ok(coefficients)
@@ -93,11 +93,11 @@ fn split_term(signed_term: &str) -> Result<(usize, FixedPoint), String> {
         1
     };
 
-    if let Some((coefficient, power))= term.split_once('*') {
+    if let Some((coefficient, power)) = term.split_once('*') {
         let coefficient: FixedPoint = extract_coefficient(coefficient, sign)?;
         let power: usize = extract_power(power)?;
         Ok((power, coefficient))
-    } else if term.starts_with("X") {
+    } else if term.starts_with('X') {
         let power: usize = extract_power(term)?;
         Ok((power, FixedPoint::new(1, 0, sign)))
     } else {
@@ -201,31 +201,12 @@ mod tests {
         }
     }
 
-    #[test]
-    fn test_simple_input() {
-        let inputs = [
-            ("3", vec![3.0]),
-            ("3*X", vec![0.0, 3.0]),
-            ("3*X^2", vec![0.0, 0.0, 3.0]),
-            ("3*X^3", vec![0.0, 0.0, 0.0, 3.0]),
-            ("X", vec![0.0, 1.0]),
-            ("3 * X ^ 0 + 6*X ^1+   X", vec![3.0, 7.0]),
-            (" 0 * X ^ 2", vec![0.0, 0.0, 0.0]),
-            (" 0.4 * X ^ 2", vec![0.0, 0.0, 0.4]),
-            ("3*X - 3.4321", vec![-3.4321, 3.0]),
-            ("-5*X +  4 -0", vec![4.0, -5.0]),
-            (
-                "  X^5 - 4.8 * X^2 + 6.6-2-1",
-                vec![3.6, 0.0, -4.8, 0.0, 0.0, 1.0]
-            ),
-            ("X^1 + 5.2*X^0", vec![5.2, 1.0]),
-        ];
-
+    fn run_parse_tests(inputs: &[(&str, Vec<f64>)]) {
         for (input, expected) in inputs {
             match parse_input_to_vec_f64(input) {
                 Ok(result) => {
                     assert_eq!(
-                        result, expected,
+                        result, *expected,
                         "Unexpected result for input {}: {:?} (expected: {:?})",
                         input, result, expected,
                     );
@@ -241,6 +222,28 @@ mod tests {
     }
 
     #[test]
+    fn test_simple_input() {
+        let inputs = [
+            ("3", vec![3.0]),
+            ("3*X", vec![0.0, 3.0]),
+            ("3*X^2", vec![0.0, 0.0, 3.0]),
+            ("3*X^3", vec![0.0, 0.0, 0.0, 3.0]),
+            ("X", vec![0.0, 1.0]),
+            ("3 * X ^ 0 + 6*X ^1+   X", vec![3.0, 7.0]),
+            (" 0 * X ^ 2", vec![0.0, 0.0, 0.0]),
+            (" 0.4 * X ^ 2", vec![0.0, 0.0, 0.4]),
+            ("3*X - 3.4321", vec![-3.4321, 3.0]),
+            ("-5*X +  4 -0", vec![4.0, -5.0]),
+            (
+                "  X^5 - 4.8 * X^2 + 6.6-2-1",
+                vec![3.6, 0.0, -4.8, 0.0, 0.0, 1.0],
+            ),
+            ("X^1 + 5.2*X^0", vec![5.2, 1.0]),
+        ];
+        run_parse_tests(&inputs);
+    }
+
+    #[test]
     fn test_equation_input() {
         let inputs = [
             ("X=X", vec![0.0, 0.0]),
@@ -253,28 +256,11 @@ mod tests {
             ("3*X - 3 = -9*X^3 + X^2", vec![-3.0, 3.0, -1.0, 9.0]),
             (
                 "  X^5 - 4 * X^2 + 6-2-1 = 36*X",
-                vec![3.0, -36.0, -4.0, 0.0, 0.0, 1.0]
+                vec![3.0, -36.0, -4.0, 0.0, 0.0, 1.0],
             ),
             ("X^1 + 5*X^0= 7.87 + 0.001", vec![-2.871, 1.0]),
             ("-5*X +  4 -0=9-8*X^2", vec![-5.0, -5.0, 8.0]),
         ];
-
-        for (input, expected) in inputs {
-            match parse_input_to_vec_f64(input) {
-                Ok(result) => {
-                    assert_eq!(
-                        result, expected,
-                        "Unexpected result for input {}: {:?} (expected: {:?})",
-                        input, result, expected,
-                    );
-                }
-                Err(e) => {
-                    panic!(
-                        "Unexpected result for input {}: {:?} (expected: {:?})",
-                        input, e, expected,
-                    );
-                }
-            }
-        }
+        run_parse_tests(&inputs);
     }
 }
