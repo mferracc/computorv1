@@ -1,11 +1,10 @@
-use crate::constants::{ INVALID_ARG_NUMBER };
+use crate::constants::INVALID_ARG_NUMBER;
 use crate::math_tools::fixed_point::FixedPoint;
 
-pub mod solvers;
-pub mod math_tools;
 pub mod constants;
+pub mod math_tools;
 pub mod parser;
-
+pub mod solvers;
 
 pub struct Polynomial {
     degree: usize,
@@ -13,7 +12,6 @@ pub struct Polynomial {
     discriminant: Option<FixedPoint>,
     solutions: Option<Vec<FixedPoint>>,
 }
-
 
 impl Polynomial {
     pub fn new(args: &[String]) -> Result<Self, String> {
@@ -40,9 +38,10 @@ impl Polynomial {
     pub fn display_result(&self) {
         println!("Reduced form: {:?}", self.coefficients);
         println!("Polynomial degree: {}", self.degree);
-        println!("Discriminant is {:?}, the two solutions are:", self.discriminant);
+        println!(
+            "Discriminant is {:?}, the two solutions are:",
+            self.discriminant
+        );
         println!("Solutions: {:?}", self.solutions);
-
     }
-
 }

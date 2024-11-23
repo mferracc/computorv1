@@ -1,6 +1,6 @@
-use crate::constants::{OPERATORS, EMPTY_INPUT, INVALID_POWER, INVALID_COEFFICIENT, POSITIVE};
-use std::collections::HashMap;
+use crate::constants::{EMPTY_INPUT, INVALID_COEFFICIENT, INVALID_POWER, OPERATORS, POSITIVE};
 use crate::math_tools::fixed_point::FixedPoint;
+use std::collections::HashMap;
 
 pub fn parse_input(input: &str) -> Result<Vec<FixedPoint>, String> {
     dbg!(&input);
@@ -31,10 +31,10 @@ fn split_input(input: &str) -> Result<(String, String), String> {
 
 fn sum_coefficients(
     left: HashMap<usize, FixedPoint>,
-    right: HashMap<usize, FixedPoint>
+    right: HashMap<usize, FixedPoint>,
 ) -> Vec<FixedPoint> {
     let degree = left.keys().chain(right.keys()).copied().max().unwrap_or(0);
-    let mut coefficients: Vec<FixedPoint> = vec![FixedPoint::new(0,0, POSITIVE);degree + 1];
+    let mut coefficients: Vec<FixedPoint> = vec![FixedPoint::new(0, 0, POSITIVE);degree + 1];
 
     for (&power, coeff) in &left {
         coefficients[power] = coeff.clone();
@@ -54,7 +54,7 @@ fn parse_equation(input: &str) -> Result<HashMap<usize, FixedPoint>, String> {
         let (power, coefficient): (usize, FixedPoint) = split_term(&term)?;
         coefficients
             .entry(power)
-            .and_modify(|c| {*c += coefficient.clone()})
+            .and_modify(|c| *c += coefficient.clone())
             .or_insert(coefficient.clone());
     }
 
@@ -93,14 +93,13 @@ fn split_term(signed_term: &str) -> Result<(usize, FixedPoint), String> {
         1
     };
 
-    if let Some((coefficient, power))= term
-        .split_once('*') {
+    if let Some((coefficient, power))= term.split_once('*') {
         let coefficient: FixedPoint = extract_coefficient(coefficient, sign)?;
         let power: usize = extract_power(power)?;
         Ok((power, coefficient))
     } else if term.starts_with("X") {
         let power: usize = extract_power(term)?;
-        Ok ((power, FixedPoint::new(1, 0, sign)))
+        Ok((power, FixedPoint::new(1, 0, sign)))
     } else {
         let coefficient: FixedPoint = extract_coefficient(term, sign)?;
         Ok((0, coefficient))
@@ -111,7 +110,7 @@ fn get_coeff_sign(term: &str) -> Option<i64> {
     match term.as_bytes().first() {
         Some(b'-') => Some(-1),
         Some(b'+') => Some(1),
-        _ => None
+        _ => None,
     }
 }
 
@@ -130,16 +129,16 @@ fn extract_power(power: &str) -> Result<usize, String> {
 }
 
 fn extract_coefficient(coefficient: &str, sign: i64) -> Result<FixedPoint, String> {
-    let fixed_parts: (&str, &str) = coefficient
-        .split_once('.')
-        .unwrap_or((coefficient, "0"));
+    let fixed_parts: (&str, &str) = coefficient.split_once('.').unwrap_or((coefficient, "0"));
 
-    let integer_part: i64 = fixed_parts.0
+    let integer_part: i64 = fixed_parts
+        .0
         .parse::<i64>()
         .map_err(|_| format!("{}{}", INVALID_COEFFICIENT, coefficient))?;
 
     let decimal_str: &str = fixed_parts.1.trim_end_matches('0');
-    let scale: i64 = 10_i64.checked_pow(decimal_str.len() as u32)
+    let scale: i64 = 10_i64
+        .checked_pow(decimal_str.len() as u32)
         .ok_or_else(|| format!("decimal overflow for value: {}", decimal_str))?;
     let decimal_part: i64 = if !decimal_str.is_empty() {
         decimal_str
@@ -149,7 +148,12 @@ fn extract_coefficient(coefficient: &str, sign: i64) -> Result<FixedPoint, Strin
         0
     };
 
-    Ok(FixedPoint::new_with_scale(integer_part, decimal_part, sign, scale))
+    Ok(FixedPoint::new_with_scale(
+        integer_part,
+        decimal_part,
+        sign,
+        scale,
+    ))
 }
 
 #[cfg(test)]
@@ -169,7 +173,7 @@ mod tests {
 
     #[test]
     fn test_wrong_input() {
-        let inputs= [
+        let inputs = [
             "",
             "eoido",
             "829h + 23 - i3ehbd + 2hr93bdi23 - idb9ub2f + ub2idu2idb",
@@ -195,7 +199,6 @@ mod tests {
                 result
             );
         }
-
     }
 
     #[test]
@@ -211,7 +214,10 @@ mod tests {
             (" 0.4 * X ^ 2", vec![0.0, 0.0, 0.4]),
             ("3*X - 3.4321", vec![-3.4321, 3.0]),
             ("-5*X +  4 -0", vec![4.0, -5.0]),
-            ("  X^5 - 4.8 * X^2 + 6.6-2-1", vec![3.6, 0.0, -4.8, 0.0, 0.0, 1.0]),
+            (
+                "  X^5 - 4.8 * X^2 + 6.6-2-1",
+                vec![3.6, 0.0, -4.8, 0.0, 0.0, 1.0]
+            ),
             ("X^1 + 5.2*X^0", vec![5.2, 1.0]),
         ];
 
@@ -219,20 +225,15 @@ mod tests {
             match parse_input_to_vec_f64(input) {
                 Ok(result) => {
                     assert_eq!(
-                        result,
-                        expected,
+                        result, expected,
                         "Unexpected result for input {}: {:?} (expected: {:?})",
-                        input,
-                        result,
-                        expected,
+                        input, result, expected,
                     );
                 }
                 Err(e) => {
                     panic!(
                         "Unexpected result for input {}: {:?} (expected: {:?})",
-                        input,
-                        e,
-                        expected,
+                        input, e, expected,
                     );
                 }
             }
@@ -250,7 +251,10 @@ mod tests {
             ("X = X^2 + 6*X", vec![0.0, -5.0, -1.0]),
             ("3 * X ^ 0 + 6*X ^1+   X= 0", vec![3.0, 7.0]),
             ("3*X - 3 = -9*X^3 + X^2", vec![-3.0, 3.0, -1.0, 9.0]),
-            ("  X^5 - 4 * X^2 + 6-2-1 = 36*X", vec![3.0, -36.0, -4.0, 0.0, 0.0, 1.0]),
+            (
+                "  X^5 - 4 * X^2 + 6-2-1 = 36*X",
+                vec![3.0, -36.0, -4.0, 0.0, 0.0, 1.0]
+            ),
             ("X^1 + 5*X^0= 7.87 + 0.001", vec![-2.871, 1.0]),
             ("-5*X +  4 -0=9-8*X^2", vec![-5.0, -5.0, 8.0]),
         ];
@@ -259,20 +263,15 @@ mod tests {
             match parse_input_to_vec_f64(input) {
                 Ok(result) => {
                     assert_eq!(
-                        result,
-                        expected,
+                        result, expected,
                         "Unexpected result for input {}: {:?} (expected: {:?})",
-                        input,
-                        result,
-                        expected,
+                        input, result, expected,
                     );
                 }
                 Err(e) => {
                     panic!(
                         "Unexpected result for input {}: {:?} (expected: {:?})",
-                        input,
-                        e,
-                        expected,
+                        input, e, expected,
                     );
                 }
             }

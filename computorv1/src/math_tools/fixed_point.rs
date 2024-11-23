@@ -1,8 +1,8 @@
-use std::ops::{Add, Sub, Mul, AddAssign, SubAssign, MulAssign};
-use std::cmp::{PartialEq, Ordering};
+use crate::constants::{MAX_SCALE, NEGATIVE};
+use std::cmp::{Ordering, PartialEq};
 use std::fmt;
 use std::fmt::Formatter;
-use crate::constants::{MAX_SCALE, NEGATIVE};
+use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign};
 
 pub struct FixedPoint {
     pub integer: i64,
@@ -52,9 +52,9 @@ impl FixedPoint {
                         sign: a.sign,
                         scale: b.scale,
                     },
-                    b.clone()
+                    b.clone(),
                 )
-            },
+            }
             Ordering::Greater => {
                 let scale_factor = a.scale / b.scale;
                 (
@@ -64,7 +64,7 @@ impl FixedPoint {
                         decimal: b.decimal * scale_factor,
                         sign: b.sign,
                         scale: a.scale,
-                    }
+                    },
                 )
             }
         }
@@ -143,7 +143,6 @@ impl AddAssign for FixedPoint {
 
 impl SubAssign for FixedPoint {
     fn sub_assign(&mut self, other: Self) {
-
         let other = FixedPoint::new(other.integer, other.decimal, -other.sign);
         *self += other;
     }

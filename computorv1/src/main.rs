@@ -1,5 +1,5 @@
-use std::{env, process};
 use computorv1::Polynomial;
+use std::{env, process};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
