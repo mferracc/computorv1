@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use crate::math_tools::fixed_point::FixedPoint;
+    use crate::math_tools::fixed_point::fixed_point::FixedPoint;
     use crate::parser::input_parser::parse_input;
 
     fn parse_input_to_vec_f64(input: &str) -> Result<Vec<f64>, String> {

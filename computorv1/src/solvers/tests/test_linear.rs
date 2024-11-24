@@ -1,35 +1,47 @@
 #[cfg(test)]
 mod tests {
+    use crate::constants::math_tools_constants::{NEGATIVE, POSITIVE};
+    use crate::math_tools::fixed_point::fixed_point::FixedPoint;
+    use crate::math_tools::polynomial::Polynomial;
     use crate::solvers::linear::solve_linear;
-    use super::*;
 
     #[test]
     fn test_simple_solution() {
-        assert_eq!(solve_linear(2.0, 4.0), Some(-2.0));
+        let polynomial: Polynomial = Polynomial::new("2*X + 4").unwrap();
+        let solution: Vec<FixedPoint> = vec!(FixedPoint::new(2, 0, NEGATIVE));
+        assert_eq!(solve_linear(&polynomial), Some(solution));
     }
 
     #[test]
     fn test_negative_coefficient_a() {
-        assert_eq!(solve_linear(-3.0, 9.0), Some(3.0));
+        let polynomial: Polynomial = Polynomial::new("-3*X + 9").unwrap();
+        let solution: Vec<FixedPoint> = vec!(FixedPoint::new(3, 9, POSITIVE));
+        assert_eq!(solve_linear(&polynomial), Some(solution));
     }
 
     #[test]
     fn test_negative_coefficient_b() {
-        assert_eq!(solve_linear(4.0, -8.0), Some(2.0));
+        let polynomial: Polynomial = Polynomial::new("4*X - 8").unwrap();
+        let solution: Vec<FixedPoint> = vec!(FixedPoint::new(2, 0, POSITIVE));
+        assert_eq!(solve_linear(&polynomial), Some(solution));
     }
 
     #[test]
     fn test_no_solution() {
-        assert_eq!(solve_linear(0.0, 4.0), None);
+        let polynomial: Polynomial = Polynomial::new("0*X + 4").unwrap();
+        assert_eq!(solve_linear(&polynomial), None);
     }
 
     #[test]
     fn test_zero_both_coefficient() {
-        assert_eq!(solve_linear(0.0, 0.0), None);
+        let polynomial: Polynomial = Polynomial::new("0*X + 0").unwrap();
+        assert_eq!(solve_linear(&polynomial), None);
     }
 
     #[test]
     fn test_edge_case_small_value() {
-        assert_eq!(solve_linear(1e-10, 1e-10), Some(-1.0));
+        let polynomial: Polynomial = Polynomial::new("1e-10*X + 1e-10").unwrap();
+        let solution: Vec<FixedPoint> = vec!(FixedPoint::new(1, 0, NEGATIVE));
+        assert_eq!(solve_linear(&polynomial), Some(solution));
     }
 }

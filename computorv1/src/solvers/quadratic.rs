@@ -1,4 +1,5 @@
 use crate::math_tools::basic;
+use crate::math_tools::fixed_point::fixed_point::FixedPoint;
 use crate::math_tools::polynomial::Polynomial;
 
 pub enum QuadraticSolution {
@@ -38,7 +39,7 @@ pub enum QuadraticSolution {
 //     return QuadraticSolution::TwoRealSolutions(x1, x2);
 // }
 
-pub fn solve_quadratic(polynomial: &mut Polynomial) {
+pub fn solve_quadratic(polynomial: &Polynomial) -> Option<Vec<FixedPoint>> {
     let a: f64 = polynomial.coefficients[0].to_f64();
     let b: f64 = polynomial.coefficients[1].to_f64();
     let c: f64 = polynomial.coefficients[2].to_f64();

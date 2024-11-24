@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use crate::math_tools::fixed_point::FixedPoint;
+use crate::math_tools::fixed_point::fixed_point::FixedPoint;
 use crate::parser::tools::{parse_equation, split_input, sum_coefficients};
 
 pub fn parse_input(input: &str) -> Result<Vec<FixedPoint>, String> {

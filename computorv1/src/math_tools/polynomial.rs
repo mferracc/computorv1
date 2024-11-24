@@ -1,5 +1,4 @@
-use crate::constants::parsing_constants::INVALID_ARG_NUMBER;
-use crate::math_tools::fixed_point::FixedPoint;
+use crate::math_tools::fixed_point::fixed_point::FixedPoint;
 use crate::parser;
 use crate::solvers::bigger_degree::solve_bigger_degree;
 use crate::solvers::const_polynomial::solve_const;
@@ -16,12 +15,8 @@ pub struct Polynomial {
 }
 
 impl Polynomial {
-    pub fn new(args: &[String]) -> Result<Self, String> {
-        if args.len() != 2 {
-            return Err(INVALID_ARG_NUMBER.to_string());
-        }
-
-        let coefficients: Vec<FixedPoint> = parser::parse_input(&args[1])?;
+    pub fn new(equation: &str) -> Result<Self, String> {
+        let coefficients: Vec<FixedPoint> = parser::parse_input(equation)?;
         let degree: usize = coefficients.len() - 1;
 
         Ok(Polynomial {
@@ -33,14 +28,14 @@ impl Polynomial {
     }
 
     pub fn solve(&mut self) {
-        match self.degree {
+        self.solutions = match self.degree {
             0 => solve_const(self),
             1 => solve_linear(self),
             2 => solve_quadratic(self),
             3 => solve_cubic(self),
             4 => solve_quartic(self),
             _ => solve_bigger_degree(self),
-        }
+        };
     }
 
     pub fn display_result(&self) {

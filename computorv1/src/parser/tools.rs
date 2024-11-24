@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use crate::constants::math_tools_constants::POSITIVE;
 use crate::constants::parsing_constants::{EMPTY_INPUT, INVALID_COEFFICIENT, INVALID_POWER, OPERATORS};
-use crate::math_tools::fixed_point::FixedPoint;
+use crate::math_tools::fixed_point::fixed_point::FixedPoint;
 
 pub fn split_input(input: &str) -> Result<(String, String), String> {
     let cleaned_input: String = input.replace(' ', "");
