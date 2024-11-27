@@ -1,7 +1,6 @@
 use crate::math_tools::fixed_point::fixed_point::FixedPoint;
 use crate::parser;
 use crate::solvers::bigger_degree::solve_bigger_degree;
-use crate::solvers::const_polynomial::solve_const;
 use crate::solvers::cubic::solve_cubic;
 use crate::solvers::linear::solve_linear;
 use crate::solvers::quadratic::solve_quadratic;
@@ -29,8 +28,8 @@ impl Polynomial {
 
     pub fn solve(&mut self) {
         self.solutions = match self.degree {
-            0 => solve_const(self),
-            1 => solve_linear(self),
+            0 => None,
+            1 => solve_linear(&self.coefficients),
             2 => solve_quadratic(self),
             3 => solve_cubic(self),
             4 => solve_quartic(self),
@@ -87,6 +86,15 @@ impl Polynomial {
     }
 
     fn display_solutions(&self) {
-        println!("Solutions: {:?}", self.solutions);
+        print!("Solutions: ");
+        match &self.solutions {
+            Some(solutions) if solutions.is_empty() => println!("no solutions."),
+            Some(solutions) => {
+                for solution in solutions {
+                    println!("  {}", solution);
+                }
+            }
+            None => println!("all real numbers are solutions."),
+        }
     }
 }

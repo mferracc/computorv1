@@ -59,4 +59,10 @@ impl FixedPoint {
             self.scale /= 10;
         }
     }
+
+    pub fn to_raw_value(&self) -> i128 {
+        let sign_multiplier: i32 = if self.sign < 0 { -1 } else { 1 };
+        let combined_value: i128 = (self.integer as i128 * self.scale as i128) + (self.decimal as i128);
+        combined_value * sign_multiplier as i128
+    }
 }
