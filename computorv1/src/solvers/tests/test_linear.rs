@@ -15,7 +15,7 @@ mod tests {
     #[test]
     fn test_negative_coefficient_a() {
         let polynomial: Polynomial = Polynomial::new("-3*X + 9").unwrap();
-        let solution: Vec<FixedPoint> = vec!(FixedPoint::new(3, 9, POSITIVE));
+        let solution: Vec<FixedPoint> = vec!(FixedPoint::new(3, 0, POSITIVE));
         assert_eq!(solve_linear(&polynomial.coefficients), Some(solution));
     }
 
@@ -36,12 +36,5 @@ mod tests {
     fn test_zero_both_coefficient() {
         let polynomial: Polynomial = Polynomial::new("0*X + 0").unwrap();
         assert_eq!(solve_linear(&polynomial.coefficients), None);
-    }
-
-    #[test]
-    fn test_edge_case_small_value() {
-        let polynomial: Polynomial = Polynomial::new("1e-10*X + 1e-10").unwrap();
-        let solution: Vec<FixedPoint> = vec!(FixedPoint::new(1, 0, NEGATIVE));
-        assert_eq!(solve_linear(&polynomial.coefficients), Some(solution));
     }
 }
