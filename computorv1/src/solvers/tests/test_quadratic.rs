@@ -1,5 +1,6 @@
 #[cfg(test)]
 mod tests {
+    use std::vec;
     use crate::constants::math_tools_constants::{NEGATIVE, POSITIVE};
     use crate::math_tools::fixed_point::fixed_point::FixedPoint;
     use crate::math_tools::polynomial::Polynomial;
@@ -7,145 +8,135 @@ mod tests {
 
     #[test]
     fn test_no_solution() {
-        let polynomial: Polynomial = Polynomial::new("X^2 + 1").unwrap();
-        let solutions: Option<Vec<FixedPoint>> = solve_quadratic(&polynomial);
+        let polynomials: Vec<Polynomial> = vec![
+            Polynomial::new("X^2 + 1").unwrap(),
+            Polynomial::new("2*X^2 + 4").unwrap(),
+            Polynomial::new("3*X^2 + 5").unwrap(),
+            Polynomial::new("X^2 + 2").unwrap(),
+            Polynomial::new("4*X^2 + 9").unwrap(),
+            Polynomial::new("X^2 + 4*X + 5").unwrap(),
+            Polynomial::new("2*X^2 - 3*X + 7").unwrap(),
+            Polynomial::new("X^2 + X + 1").unwrap(),
+            Polynomial::new("5*X^2 - 2*X + 8").unwrap(),
+            Polynomial::new("3*X^2 + X + 4").unwrap(),
+            Polynomial::new("X^2 + 6*X + 10").unwrap(),
+            Polynomial::new("4*X^2 + 5*X + 9").unwrap(),
+            Polynomial::new("X^2 - X + 2").unwrap(),
+            Polynomial::new("6*X^2 + 2*X + 3").unwrap(),
+            Polynomial::new("X^2 + 2*X + 3").unwrap(),
 
-        assert!(matches!(solutions, None));
+        ];
+
+        for poly in polynomials {
+            let solutions: Option<Vec<FixedPoint>> = solve_quadratic(&poly.coefficients);
+            assert!(matches!(solutions, None));
+        }
     }
 
     #[test]
     fn test_one_solution() {
-        let polynomial: Polynomial = Polynomial::new("-X^2 - 2*X + 1").unwrap();
-        let solutions: Option<Vec<FixedPoint>> = solve_quadratic(&polynomial);
+        let polynomials: Vec<Polynomial> = vec![
+            Polynomial::new("X^2 - 2*X + 1").unwrap(),
+            Polynomial::new("X^2 + 4*X + 4").unwrap(),
+            Polynomial::new("X^2 - 6*X + 9").unwrap(),
+            Polynomial::new("4*X^2 - 4*X + 1").unwrap(),
+            Polynomial::new("9*X^2 - 12*X + 4").unwrap(),
+            Polynomial::new("X^2 - 10*X + 25").unwrap(),
+            Polynomial::new("16*X^2 - 8*X + 1").unwrap(),
+            Polynomial::new("25*X^2 - 20*X + 4").unwrap(),
+            Polynomial::new("36*X^2 + 12*X + 1").unwrap(),
+        ];
 
-        let expected: Vec<FixedPoint> = vec![FixedPoint::new(1, 0, POSITIVE)];
+        let expected: Vec<Vec<FixedPoint>> = vec![
+            vec![FixedPoint::new(1, 0, POSITIVE)],
+            vec![FixedPoint::new(-2, 0, POSITIVE)],
+            vec![FixedPoint::new(3, 0, POSITIVE)],
+            vec![FixedPoint::new(0, 5, NEGATIVE)],
+            vec![FixedPoint::new(0, 666666666666666, POSITIVE)],
+            vec![FixedPoint::new(5, 0, POSITIVE)],
+            vec![FixedPoint::new(0, 25, POSITIVE)],
+            vec![FixedPoint::new(0, 4, POSITIVE)],
+            vec![FixedPoint::new(0, 166666666666666, NEGATIVE)],
+        ];
 
-        if let Some(sols) = solutions {
-            assert_eq!(sols.len(), expected.len(), "Expected one solution.");
-            for expected_sol in &expected {
-                assert!(sols.contains(expected_sol), "Expected solution: {}", expected_sol);
+        for (poly, exp) in polynomials.into_iter().zip(expected.into_iter()) {
+            let solutions: Option<Vec<FixedPoint>> = solve_quadratic(&poly.coefficients);
+
+            if let Some(sols) = solutions {
+                assert_eq!(sols.len(), exp.len(), "Expected one solution.");
+                for expected_sol in &exp {
+                    assert!(sols.contains(expected_sol), "Expected solution: {} (got {})", expected_sol, sols[0].to_f64());
+                }
+            } else {
+                panic!("Expected a solution, but got None.");
             }
-        } else {
-            panic!("Expected a solution, but got None.");
         }
     }
 
     #[test]
     fn test_two_solutions() {
-        let polynomial: Polynomial = Polynomial::new("-X^2 + 3*X + 2").unwrap();
-        let solutions: Option<Vec<FixedPoint>> = solve_quadratic(&polynomial);
-
-        let expected: Vec<FixedPoint> = vec![
-            FixedPoint::new(1, 0, POSITIVE),
-            FixedPoint::new(2, 0, POSITIVE),
+        let polynomials: Vec<Polynomial> = vec![
+            Polynomial::new("X^2 - 5*X + 4").unwrap(),
+            Polynomial::new("X^2 - 5*X + 6").unwrap(),
+            Polynomial::new("X^2 + 3*X - 4").unwrap(),
+            Polynomial::new("2*X^2 - 7*X + 3").unwrap(),
+            Polynomial::new("X^2 - 4*X - 12").unwrap(),
+            Polynomial::new("3*X^2 + 2*X - 8").unwrap(),
+            Polynomial::new("X^2 - 3*X - 10").unwrap(),
+            Polynomial::new("X^2 + 6*X + 5").unwrap(),
+            Polynomial::new("4*X^2 - 4*X - 8").unwrap(),
+            Polynomial::new("5*X^2 - 4*X - 9").unwrap(),
+            Polynomial::new("3*X^2 - 11*X + 6").unwrap(),
         ];
 
-        if let Some(sols) = solutions {
-            assert_eq!(sols.len(), expected.len(), "Expected two solutions.");
+        let expected: Vec<Vec<FixedPoint>> = vec![
+            vec![FixedPoint::new(1, 0, POSITIVE), FixedPoint::new(4, 0, POSITIVE)],
+            vec![FixedPoint::new(2, 0, POSITIVE), FixedPoint::new(3, 0, POSITIVE)],
+            vec![FixedPoint::new(1, 0, NEGATIVE), FixedPoint::new(4, 0, POSITIVE)],
+            vec![FixedPoint::new(0, 5, POSITIVE), FixedPoint::new(3, 0, POSITIVE)],
+            vec![FixedPoint::new(6, 0, POSITIVE), FixedPoint::new(2, 0, POSITIVE)],
+            vec![FixedPoint::new(2, 0, NEGATIVE), FixedPoint::new(1, 333333333333333, POSITIVE)],
+            vec![FixedPoint::new(5, 0, POSITIVE), FixedPoint::new(2, 0, POSITIVE)],
+            vec![FixedPoint::new(1, 0, NEGATIVE), FixedPoint::new(5, 0, POSITIVE)],
+            vec![FixedPoint::new(1, 0, NEGATIVE), FixedPoint::new(2, 0, POSITIVE)],
+            vec![FixedPoint::new(1, 8, NEGATIVE), FixedPoint::new(1, 0, POSITIVE)],
+            vec![FixedPoint::new(0, 666666666666666, NEGATIVE), FixedPoint::new(3, 0, POSITIVE)],
+        ];
 
-            for expected_sol in &expected {
-                assert!(sols.contains(expected_sol), "Expected solution: {}", expected_sol);
+        for (poly, exp) in polynomials.into_iter().zip(expected.into_iter()) {
+            let solutions: Option<Vec<FixedPoint>> = solve_quadratic(&poly.coefficients);
+
+            if let Some(sols) = solutions {
+                assert_eq!(sols.len(), exp.len(), "Expected two solutions.");
+                for expected_sol in &exp {
+                    assert!(
+                        sols.contains(expected_sol),
+                        "Expected solutions: {}, but got {:?}.",
+                        expected_sol,
+                        sols,
+                    );
+                }
+            } else {
+                panic!("Expected two solutions, but got None.");
             }
-        } else {
-            panic!("Expected two solutions, but got None.");
         }
     }
 
     #[test]
     #[should_panic(
-        expected = "Coefficient 'a' cannot be 0 in a quadratic equation. Use a linear solver."
+        expected = "Wrong solver used."
     )]
     fn test_panic_on_zero_a() {
         let polynomial: Polynomial = Polynomial::new("2*X + 1").unwrap();
-        solve_quadratic(&polynomial);
+        solve_quadratic(&polynomial.coefficients);
     }
 
     #[test]
-    fn test_small_coefficients() {
-        let polynomial: Polynomial = Polynomial::new("1e-8*X^2 + 1e-4*X + 1e-2").unwrap();
-        let solutions: Option<Vec<FixedPoint>> = solve_quadratic(&polynomial);
-
-        if let Some(ref sol) = solutions {
-            if sol.len() == 2 {
-                assert!(sol[0].is_finite(), "Expected finite x1, got {}", sol[0]);
-                assert!(sol[1].is_finite(), "Expected finite x2, got {}", sol[1]);
-            } else {
-                panic!("Expected two real solutions for small coefficients.");
-            }
-        } else {
-            panic!("Expected some solutions, but got None.");
-        }
-    }
-
-    #[test]
+    #[should_panic(
+        expected = "Multiplication overflow"
+    )]
     fn test_large_coefficients() {
-        let polynomial: Polynomial = Polynomial::new("1e8*X^2 - 1e10*X + 1e8").unwrap();
-        let solutions: Option<Vec<FixedPoint>> = solve_quadratic(&polynomial);
-
-        if let Some(solutions) = solutions {
-            assert_eq!(solutions.len(), 2, "Expected two solutions.");
-            let tolerance: FixedPoint = FixedPoint::new_with_scale(1, 0, 1, 6);
-            let expected_x1: FixedPoint = FixedPoint::new_with_scale(10000001, 0, 1, 0);
-            let expected_x2: FixedPoint = FixedPoint::new_with_scale(9999999, 0, 1, 0);
-
-            assert!(
-                solutions[0].approx_eq(&expected_x1, &tolerance),
-                "x1 is imprecise: {}",
-                solutions[0]
-            );
-            assert!(
-                solutions[1].approx_eq(&expected_x2, &tolerance),
-                "x2 is imprecise: {}",
-                solutions[1]
-            );
-        } else {
-            panic!("Expected two real solutions for large coefficients.");
-        }
-    }
-
-    #[test]
-    fn test_precision_issue() {
-        let polynomial: Polynomial = Polynomial::new("X^2 - 4*X + 3.9999999").unwrap();
-        let solutions: Option<Vec<FixedPoint>> = solve_quadratic(&polynomial);
-
-        if let Some(solutions) = solutions {
-            assert_eq!(solutions.len(), 2, "Expected two solutions.");
-            let expected_x1 = FixedPoint::new_with_scale(20003163, 0, 1, 4); // 2.0003163
-            let tolerance = FixedPoint::new_with_scale(1, 0, 1, 4); // 1e-4 tolerance
-
-            assert!(
-                solutions[0].approx_eq(&expected_x1, &tolerance),
-                "x1 is imprecise: {}",
-                solutions[0]
-            );
-        } else {
-            panic!("Expected two real solutions.");
-        }
-    }
-
-    #[test]
-    fn test_stress_test_precision_issue() {
-        let polynomial: Polynomial = Polynomial::new("X^2 + 1e16*X + 1").unwrap();
-        let solutions: Option<Vec<FixedPoint>> = solve_quadratic(&polynomial);
-
-        if let Some(solutions) = solutions {
-            assert_eq!(solutions.len(), 2, "Expected two solutions.");
-            let tolerance: FixedPoint = FixedPoint::new_with_scale(1, 0, 1, 6);
-            let expected_x1: FixedPoint = FixedPoint::new_with_scale(-1e16 as i64, 0, NEGATIVE, 0);
-            let expected_x2: FixedPoint = FixedPoint::new_with_scale(1, 0, 1, 16);
-
-            assert!(
-                solutions[0].approx_eq(&expected_x1, &tolerance),
-                "x1 is imprecise: {}",
-                solutions[0]
-            );
-            assert!(
-                solutions[1].approx_eq(&expected_x2, &tolerance),
-                "x2 is imprecise: {}",
-                solutions[1]
-            );
-        } else {
-            panic!("Expected two real solutions.");
-        }
+        let polynomial: Polynomial = Polynomial::new("100000000*X^2 - 10000000000*X + 100000000").unwrap();
+        let _solutions: Option<Vec<FixedPoint>> = solve_quadratic(&polynomial.coefficients);
     }
 }

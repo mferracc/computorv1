@@ -1,5 +1,5 @@
 use std::cmp::Ordering;
-use crate::constants::math_tools_constants::{NEGATIVE, POSITIVE};
+use crate::constants::math_tools_constants::{MULTIPLICATION_OVERFLOW, NEGATIVE, POSITIVE};
 use crate::math_tools::fixed_point::fixed_point::FixedPoint;
 
 impl FixedPoint {
@@ -64,5 +64,38 @@ impl FixedPoint {
         let sign_multiplier: i32 = if self.sign < 0 { -1 } else { 1 };
         let combined_value: i128 = (self.integer as i128 * self.scale as i128) + (self.decimal as i128);
         combined_value * sign_multiplier as i128
+    }
+
+    pub fn trim_ending_zeros(&mut self) {
+        while self.decimal != 0 && self.decimal % 10 == 0 && self.scale > 1 {
+            self.decimal /= 10;
+            self.scale /= 10;
+        }
+    }
+
+    pub fn calculate_product_total(&self, rhs: Self) -> Result<i64, &'static str> {
+        let (self_scaled, rhs_scaled): (FixedPoint, FixedPoint) = Self::scale_to_match(self, &rhs);
+
+        let integer_mul: i64 = self_scaled.integer.checked_mul(rhs_scaled.scale)
+            .ok_or(MULTIPLICATION_OVERFLOW)?;
+
+        let integer_rhs_mul: i64 = integer_mul.checked_mul(rhs_scaled.integer)
+            .ok_or(MULTIPLICATION_OVERFLOW)?;
+
+        let integer_decimal_1: i64 = self_scaled.integer.checked_mul(rhs_scaled.decimal)
+            .ok_or(MULTIPLICATION_OVERFLOW)?;
+
+        let integer_decimal_2: i64 = self_scaled.decimal.checked_mul(rhs_scaled.integer)
+            .ok_or(MULTIPLICATION_OVERFLOW)?;
+
+        let decimal_decimal_mul: i64 = self_scaled.decimal.checked_mul(rhs_scaled.decimal)
+            .ok_or(MULTIPLICATION_OVERFLOW)?;
+
+        let product_total: i64 = integer_rhs_mul
+            + integer_decimal_1
+            + integer_decimal_2
+            + (decimal_decimal_mul / self_scaled.scale);
+
+        Ok(product_total)
     }
 }

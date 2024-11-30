@@ -1,6 +1,6 @@
 use std::cmp::{Ordering, PartialEq, PartialOrd};
 use std::ops::Sub;
-use crate::constants::math_tools_constants::{MAX_VALUE, POSITIVE, NEGATIVE};
+use crate::constants::math_tools_constants::{POSITIVE, NEGATIVE};
 use crate::math_tools::fixed_point::fixed_point::FixedPoint;
 
 impl PartialEq for FixedPoint {
@@ -27,8 +27,7 @@ impl PartialOrd for FixedPoint {
 
 impl FixedPoint {
     pub fn is_finite(&self) -> bool {
-        let value = self.integer * self.scale + self.decimal;
-        value.abs() <= MAX_VALUE
+        self.decimal == 0
     }
     pub fn approx_eq(&self, other: &FixedPoint, tolerance: &FixedPoint) -> bool {
         let diff = self.sub(other).abs();

@@ -1,15 +1,11 @@
 use crate::math_tools::fixed_point::fixed_point::FixedPoint;
 use crate::parser;
-use crate::solvers::bigger_degree::solve_bigger_degree;
-use crate::solvers::cubic::solve_cubic;
 use crate::solvers::linear::solve_linear;
 use crate::solvers::quadratic::solve_quadratic;
-use crate::solvers::quartic::solve_quartic;
 
 pub struct Polynomial {
     pub degree: usize,
     pub coefficients: Vec<FixedPoint>,
-    pub discriminant: Option<FixedPoint>,
     pub solutions: Option<Vec<FixedPoint>>,
 }
 
@@ -21,27 +17,24 @@ impl Polynomial {
         Ok(Polynomial {
             degree,
             coefficients,
-            discriminant: None,
             solutions: None,
         })
     }
 
     pub fn solve(&mut self) {
+        self.display_reduced_form();
+        self.display_degree();
+
         self.solutions = match self.degree {
             0 => None,
             1 => solve_linear(&self.coefficients),
-            2 => solve_quadratic(self),
-            3 => solve_cubic(self),
-            4 => solve_quartic(self),
-            _ => solve_bigger_degree(self),
+            2 => solve_quadratic(&self.coefficients),
+            _ => {
+                println!("Degree > 2 not supported");
+                None
+            },
         };
-    }
-
-    pub fn display_result(&self) {
-        self.display_reduced_form();
-        self.display_degree();
-        self.display_discriminant();
-        self.display_solutions();
+        self.display_solutions()
     }
 
     /// Private part
@@ -71,30 +64,23 @@ impl Polynomial {
         println!("Polynomial degree: {}", self.degree);
     }
 
-    fn display_discriminant(&self) {
-        if !self.discriminant.is_none() {
-            print!(
-                "Discriminant is {:?}",
-                self.discriminant
-            );
-            if !self.solutions.is_none() {
-                println!(", the two solutions are:");
-            } else {
-                println!(", no solutions.");
-            }
-        }
-    }
-
     fn display_solutions(&self) {
-        print!("Solutions: ");
+        print!("Solutions:");
         match &self.solutions {
             Some(solutions) if solutions.is_empty() => println!("no solutions."),
             Some(solutions) => {
                 for solution in solutions {
-                    println!("  {}", solution);
+                    print!(" {} ", solution.to_f64());
                 }
+                println!();
             }
-            None => println!("all real numbers are solutions."),
+            None => {
+                if self.degree == 1 {
+                    println!(" all real numbers are solutions.")
+                } else {
+                    println!(" None")
+                }
+            },
         }
     }
 }

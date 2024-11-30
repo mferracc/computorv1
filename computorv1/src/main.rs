@@ -19,5 +19,4 @@ fn main() {
         .unwrap_or_else(|err| handle_error(&err));
 
     polynomial.solve();
-    polynomial.display_result();
 }
