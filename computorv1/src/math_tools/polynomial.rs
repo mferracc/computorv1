@@ -1,17 +1,16 @@
-use crate::math_tools::fixed_point::fixed_point::FixedPoint;
 use crate::parser;
 use crate::solvers::linear::solve_linear;
 use crate::solvers::quadratic::solve_quadratic;
 
 pub struct Polynomial {
     pub degree: usize,
-    pub coefficients: Vec<FixedPoint>,
-    pub solutions: Option<Vec<FixedPoint>>,
+    pub coefficients: Vec<f64>,
+    pub solutions: Option<Vec<f64>>,
 }
 
 impl Polynomial {
     pub fn new(equation: &str) -> Result<Self, String> {
-        let coefficients: Vec<FixedPoint> = parser::parse_input(equation)?;
+        let coefficients: Vec<f64> = parser::parse_input(equation)?;
         let degree: usize = coefficients.len() - 1;
 
         Ok(Polynomial {
@@ -43,7 +42,7 @@ impl Polynomial {
         let mut terms: Vec<String> = Vec::new();
 
         for (index, coefficient) in self.coefficients.iter().enumerate() {
-            let value: f64 = coefficient.to_f64();
+            let value: f64 = *coefficient;
             if value != 0.0 {
                 let mut term: String = format!("{}", value);
                 if index > 0 {
@@ -70,7 +69,7 @@ impl Polynomial {
             Some(solutions) if solutions.is_empty() => println!("no solutions."),
             Some(solutions) => {
                 for solution in solutions {
-                    print!(" {} ", solution.to_f64());
+                    print!(" {} ", solution);
                 }
                 println!();
             }

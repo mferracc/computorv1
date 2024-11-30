@@ -1,21 +1,19 @@
-use crate::constants::math_tools_constants::ZERO;
-use crate::math_tools::fixed_point::fixed_point::FixedPoint;
 
-pub fn solve_linear(coefficients: &Vec<FixedPoint>) -> Option<Vec<FixedPoint>> {
+pub fn solve_linear(coefficients: &Vec<f64>) -> Option<Vec<f64>> {
     if coefficients.len() < 2 {
         return None;
     }
 
-    let a: FixedPoint = coefficients[1];
-    let b: FixedPoint = coefficients[0];
+    let a: f64 = coefficients[1];
+    let b: f64 = coefficients[0];
 
-    if a == ZERO {
+    if a == 0.0 {
         println!("Linear equation with no solution (a = 0).");
         None
     } else {
-        let solution: FixedPoint = -b/a;
+        let solution: f64 = -b/a;
         dbg!(&solution);
-        println!("Linear equation with one solution: -b/a = {:.}/{:.}", -b.to_f64(), a.to_f64());
+        println!("Linear equation with one solution: -b/a = {:.}/{:.}", -b, a);
         Some(vec![solution])
     }
 }

@@ -1,7 +1,6 @@
+use core::f64;
 use std::collections::HashMap;
-use crate::constants::math_tools_constants::POSITIVE;
 use crate::constants::parsing_constants::{EMPTY_INPUT, INVALID_COEFFICIENT, INVALID_POWER, OPERATORS};
-use crate::math_tools::fixed_point::fixed_point::FixedPoint;
 
 pub fn split_input(input: &str) -> Result<(String, String), String> {
     let cleaned_input: String = input.replace(' ', "");
@@ -18,11 +17,11 @@ pub fn split_input(input: &str) -> Result<(String, String), String> {
 }
 
 pub fn sum_coefficients(
-    left: HashMap<usize, FixedPoint>,
-    right: HashMap<usize, FixedPoint>,
-) -> Vec<FixedPoint> {
+    left: HashMap<usize, f64>,
+    right: HashMap<usize, f64>,
+) -> Vec<f64> {
     let degree = left.keys().chain(right.keys()).copied().max().unwrap_or(0);
-    let mut coefficients: Vec<FixedPoint> = vec![FixedPoint::new(0, 0, POSITIVE); degree + 1];
+    let mut coefficients: Vec<f64> = vec![0.0; degree + 1];
 
     for (&power, coeff) in &left {
         coefficients[power] = coeff.clone();
@@ -34,12 +33,12 @@ pub fn sum_coefficients(
     coefficients
 }
 
-pub fn parse_equation(input: &str) -> Result<HashMap<usize, FixedPoint>, String> {
+pub fn parse_equation(input: &str) -> Result<HashMap<usize, f64>, String> {
     let terms: Vec<String> = split_inclusive(input);
-    let mut coefficients: HashMap<usize, FixedPoint> = HashMap::new();
+    let mut coefficients: HashMap<usize, f64> = HashMap::new();
 
     for term in terms {
-        let (power, coefficient): (usize, FixedPoint) = split_term(&term)?;
+        let (power, coefficient): (usize, f64) = split_term(&term)?;
         coefficients
             .entry(power)
             .and_modify(|c| *c += coefficient.clone())
@@ -71,33 +70,33 @@ pub fn split_inclusive(input: &str) -> Vec<String> {
     terms
 }
 
-pub fn split_term(signed_term: &str) -> Result<(usize, FixedPoint), String> {
+pub fn split_term(signed_term: &str) -> Result<(usize, f64), String> {
     let mut term: &str = signed_term;
 
-    let sign: i64 = if let Some(x) = get_coeff_sign(signed_term) {
+    let sign: f64 = if let Some(x) = get_coeff_sign(signed_term) {
         term = &term[1..];
         x
     } else {
-        1
+        1.0
     };
 
     if let Some((coefficient, power)) = term.split_once('*') {
-        let coefficient: FixedPoint = extract_coefficient(coefficient, sign)?;
+        let coefficient: f64 = extract_coefficient(coefficient, sign)?;
         let power: usize = extract_power(power)?;
         Ok((power, coefficient))
     } else if term.starts_with('X') {
         let power: usize = extract_power(term)?;
-        Ok((power, FixedPoint::new(1, 0, sign)))
+        Ok((power, 1.0 * sign))
     } else {
-        let coefficient: FixedPoint = extract_coefficient(term, sign)?;
+        let coefficient: f64 = extract_coefficient(term, sign)?;
         Ok((0, coefficient))
     }
 }
 
-pub fn get_coeff_sign(term: &str) -> Option<i64> {
+pub fn get_coeff_sign(term: &str) -> Option<f64> {
     match term.as_bytes().first() {
-        Some(b'-') => Some(-1),
-        Some(b'+') => Some(1),
+        Some(b'-') => Some(-1.0),
+        Some(b'+') => Some(1.0),
         _ => None,
     }
 }
@@ -116,30 +115,11 @@ pub fn extract_power(power: &str) -> Result<usize, String> {
     }
 }
 
-pub fn extract_coefficient(coefficient: &str, sign: i64) -> Result<FixedPoint, String> {
-    let fixed_parts: (&str, &str) = coefficient.split_once('.').unwrap_or((coefficient, "0"));
+pub fn extract_coefficient(coefficient: &str, sign: f64) -> Result<f64, String> {
 
-    let integer_part: i64 = fixed_parts
-        .0
-        .parse::<i64>()
+    let coefficient: f64 = coefficient
+        .parse::<f64>()
         .map_err(|_| format!("{}{}", INVALID_COEFFICIENT, coefficient))?;
 
-    let decimal_str: &str = fixed_parts.1.trim_end_matches('0');
-    let scale: i64 = 10_i64
-        .checked_pow(decimal_str.len() as u32)
-        .ok_or_else(|| format!("decimal overflow for value: {}", decimal_str))?;
-    let decimal_part: i64 = if !decimal_str.is_empty() {
-        decimal_str
-            .parse::<i64>()
-            .map_err(|_| format!("{}{}", INVALID_COEFFICIENT, coefficient))?
-    } else {
-        0
-    };
-
-    Ok(FixedPoint::new_with_scale(
-        integer_part,
-        decimal_part,
-        sign,
-        scale,
-    ))
+    Ok(coefficient * sign)
 }
