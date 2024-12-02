@@ -10,9 +10,9 @@
 
 ## **1 - Introduction**
 
-This project is about building a **polynomial equation solver** that can handle linear equations and quadratic equations.
+This project is about building a **polynomial equation solver** that can handle linear and quadratic equations.
 
-We will be using Rust all along, and use Rust's powerful testing tools all along to follow a Test Driven Development approach.
+We will be using Rust and its powerful testing tools all along to follow a Test Driven Development approach.
 
 ---
 
@@ -217,3 +217,5 @@ pub fn solve_quadratic(a: f64, b: f64, c: f64) -> QuadraticSolution {
     return QuadraticSolution::TwoRealSolutions(x1, x2);
 }
 ```
+
+And that's it! We've built a robust solver for both linear and quadratic equations using TDD in Rust. With all tests passing, our solver is ready to use!
