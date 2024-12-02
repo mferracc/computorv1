@@ -6,21 +6,11 @@
 1. [Introduction](#1---introduction)
 2. [Linear Solver](#2---linear-solver)
 3. [Quadratic Solver](#3---quadratic-solver)
-4. [Cubic Solver Using Cardano's Formula](#4---cubic-solver-using-cardanos-formula)
-5. [Ferrari's method for quartics]()
-6. [Can we solve higher degrees polynomials? The Abel-Ruffini Theorem]()
-7. [The guessing approach: Newton-Raphson Method]()
-8. [Finding all the roots at the same time with the Durand-Kerner Method]()
-9. [Last but not least: The Bairstow's Method]()
-10. [Conclusion]()
-
 ---
 
 ## **1 - Introduction**
 
-This project is about building a **polynomial equation solver** that can handle everything from linear equations to quartics.
-The Abel Ruffini theorem states that there is no general solution for polynomials of higher-degree.
-However, by pushing the limits, we might just find ways to tackle even higher-degree equations.
+This project is about building a **polynomial equation solver** that can handle linear equations and quadratic equations.
 
 We will be using Rust all along, and use Rust's powerful testing tools all along to follow a Test Driven Development approach.
 
@@ -33,8 +23,7 @@ This way, we have a clear set of criteria for what our code needs to achieve.
 
 Let's start by handling the simpler cases, like [linear equations](https://en.wikipedia.org/wiki/Linear_equation).
 
-Linear equations are of the form `ax + b = 0` represented as follows on a graph: 
-
+Linear equations are of the form `ax + b = 0` represented as follows on a graph:
 
 <div align="center">
   <h3><i>Linear Equation Graph: y = ax + b</i></h3>
@@ -228,34 +217,3 @@ pub fn solve_quadratic(a: f64, b: f64, c: f64) -> QuadraticSolution {
     return QuadraticSolution::TwoRealSolutions(x1, x2);
 }
 ```
-
----
-
-## **4 - Cubic Solver Using Cardano's Formula**
-
-
-
-
-Solving Cubic Equations Using Cardano's Formula
-Concept: Recursive Functions
-Introduce recursion, which can be particularly useful for polynomial decompositions or parts of Cardano's formula. Use this opportunity to discuss when recursion is efficient and when it can lead to stack overflow or performance issues.
-
-Ferrari's Method for Quartics
-Concept: Algorithm Complexity and Optimization
-Ferrari's method is more complex, so this is a great place to introduce algorithm complexity. Explain Big O notation in practical terms and discuss why more efficient algorithms matter when computations get heavier.
-
-Can We Solve Higher-Degree Polynomials? The Abel-Ruffini Theorem
-Concept: Limits of Computability and Theoretical Constraints
-Since the Abel-Ruffini theorem states that certain polynomials can’t be solved with radicals, introduce the idea of computational limits. Discuss how some problems have theoretical constraints that require alternative approaches like approximations or iterative methods.
-
-The Guessing Approach: Newton-Raphson Method 
-Concept: Iterative Methods and Convergence
-Newton-Raphson is a classic iterative approach, so explain iterative methods and convergence criteria. This is a great place to discuss convergence speed, accuracy, and stopping conditions in iterative algorithms.
-
-Finding All the Roots at the Same Time with the Durand-Kerner Method
-Concept: Parallelism and Concurrent Computing
-Durand-Kerner involves finding multiple roots simultaneously, which is a good context for introducing parallelism. Discuss how concurrent computing could be applied here and what it could mean for performance.
-
-Last but Not Least: The Bairstow's Method
-Concept: Error Handling and Robustness in Numerical Methods
-Introduce robust error handling strategies and the importance of handling edge cases in numerical methods. This could also be a good place to introduce Rust’s Result type for error handling.
