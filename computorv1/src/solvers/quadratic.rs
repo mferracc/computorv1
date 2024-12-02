@@ -1,6 +1,6 @@
 use crate::math_tools::basic;
 
-pub fn solve_quadratic(coefficients: &Vec<f64>) -> Option<Vec<f64>> {
+pub fn solve_quadratic(coefficients: &[f64]) -> Option<Vec<f64>> {
     if coefficients.len() != 3 {
         panic!("Wrong solver used.")
     }

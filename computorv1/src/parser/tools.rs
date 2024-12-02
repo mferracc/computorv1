@@ -24,10 +24,10 @@ pub fn sum_coefficients(
     let mut coefficients: Vec<f64> = vec![0.0; degree + 1];
 
     for (&power, coeff) in &left {
-        coefficients[power] = coeff.clone();
+        coefficients[power] = *coeff
     }
     for (&power, coeff) in &right {
-        coefficients[power] -= coeff.clone();
+        coefficients[power] -= *coeff;
     }
 
     coefficients
@@ -41,8 +41,8 @@ pub fn parse_equation(input: &str) -> Result<HashMap<usize, f64>, String> {
         let (power, coefficient): (usize, f64) = split_term(&term)?;
         coefficients
             .entry(power)
-            .and_modify(|c| *c += coefficient.clone())
-            .or_insert_with(|| coefficient.clone());
+            .and_modify(|c| *c += coefficient)
+            .or_insert_with(|| coefficient);
     }
 
     Ok(coefficients)

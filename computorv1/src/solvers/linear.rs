@@ -1,5 +1,5 @@
 
-pub fn solve_linear(coefficients: &Vec<f64>) -> Option<Vec<f64>> {
+pub fn solve_linear(coefficients: &[f64]) -> Option<Vec<f64>> {
     if coefficients.len() < 2 {
         return None;
     }
