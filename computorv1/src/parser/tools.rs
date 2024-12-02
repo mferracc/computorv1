@@ -1,6 +1,6 @@
 use core::f64;
 use std::collections::HashMap;
-use crate::constants::parsing_constants::{EMPTY_INPUT, INVALID_COEFFICIENT, INVALID_POWER, OPERATORS};
+use crate::constants::parsing_constants::{EMPTY_INPUT, INVALID_COEFFICIENT, INVALID_POWER, OPERATORS, PRECISION};
 
 pub fn split_input(input: &str) -> Result<(String, String), String> {
     let cleaned_input: String = input.replace(' ', "");
@@ -16,6 +16,13 @@ pub fn split_input(input: &str) -> Result<(String, String), String> {
     Ok((left.to_string(), right.to_string()))
 }
 
+fn round_vec(values: Vec<f64>, precision: u32) -> Vec<f64> {
+    let factor = 10f64.powi(precision as i32);
+    values.into_iter()
+        .map(|v| (v * factor).round() / factor)
+        .collect()
+}
+
 pub fn sum_coefficients(
     left: HashMap<usize, f64>,
     right: HashMap<usize, f64>,
@@ -29,6 +36,7 @@ pub fn sum_coefficients(
     for (&power, coeff) in &right {
         coefficients[power] -= *coeff;
     }
+    coefficients = round_vec(coefficients, PRECISION);
 
     coefficients
 }

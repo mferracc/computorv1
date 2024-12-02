@@ -1,7 +1,7 @@
 use crate::math_tools::basic;
 
 pub fn solve_quadratic(coefficients: &[f64]) -> Option<Vec<f64>> {
-    if coefficients.len() != 3 {
+    if coefficients.len() != 3 || coefficients[2] == 0.0 {
         panic!("Wrong solver used.")
     }
 
@@ -18,8 +18,8 @@ pub fn solve_quadratic(coefficients: &[f64]) -> Option<Vec<f64>> {
             return None
         },
     };
-    let x1: f64 = (-b - sqrt_delta) / (a * 2.0);
-    let x2: f64 = (sqrt_delta - b) / (a * 2.0);
+    let x1: f64 = (-b - sqrt_delta) / (2.0 * a);
+    let x2: f64 = (2.0 * c) / (-b - sqrt_delta);
 
     if delta == 0.0 {
         println!("∆ = 0 => One single solution: x0 = {:.} / (2 * {:.}) = {:.}", -b, a, x1);
