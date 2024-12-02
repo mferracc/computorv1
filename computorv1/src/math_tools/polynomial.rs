@@ -45,13 +45,12 @@ impl Polynomial {
             _ => {
                 println!("Degree > 2 not supported");
                 None
-            },
+            }
         };
         self.display_solutions()
     }
 
     /// Private part
-
     fn display_reduced_form(&self) {
         let mut terms: Vec<String> = Vec::new();
 
@@ -93,7 +92,7 @@ impl Polynomial {
                 } else {
                     println!(" None")
                 }
-            },
+            }
         }
     }
 }

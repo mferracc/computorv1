@@ -1,4 +1,3 @@
-
 pub fn solve_linear(coefficients: &[f64]) -> Option<Vec<f64>> {
     if coefficients.len() < 2 {
         return None;
@@ -11,7 +10,7 @@ pub fn solve_linear(coefficients: &[f64]) -> Option<Vec<f64>> {
         println!("Linear equation with no solution (a = 0).");
         None
     } else {
-        let solution: f64 = -b/a;
+        let solution: f64 = -b / a;
         dbg!(&solution);
         println!("Linear equation with one solution: -b/a = {:.}/{:.}", -b, a);
         Some(vec![solution])

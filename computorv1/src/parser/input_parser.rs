@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use crate::parser::tools::{parse_equation, split_input, sum_coefficients};
+use std::collections::HashMap;
 
 pub fn parse_input(input: &str) -> Result<Vec<f64>, String> {
     let equation_members: (String, String) = split_input(input)?;

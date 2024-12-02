@@ -6,15 +6,11 @@
 1. [Introduction](#1---introduction)
 2. [Linear Solver](#2---linear-solver)
 3. [Quadratic Solver](#3---quadratic-solver)
-4. [Conclusion](#4---conclusion)
-
 ---
 
 ## **1 - Introduction**
 
-This project is about building a **polynomial equation solver** that can handle everything from linear equations to quartics.
-The Abel Ruffini theorem states that there is no general solution for polynomials of higher-degree.
-However, by pushing the limits, we might just find ways to tackle even higher-degree equations.
+This project is about building a **polynomial equation solver** that can handle linear equations and quadratic equations.
 
 We will be using Rust all along, and use Rust's powerful testing tools all along to follow a Test Driven Development approach.
 
@@ -27,8 +23,7 @@ This way, we have a clear set of criteria for what our code needs to achieve.
 
 Let's start by handling the simpler cases, like [linear equations](https://en.wikipedia.org/wiki/Linear_equation).
 
-Linear equations are of the form `ax + b = 0` represented as follows on a graph: 
-
+Linear equations are of the form `ax + b = 0` represented as follows on a graph:
 
 <div align="center">
   <h3><i>Linear Equation Graph: y = ax + b</i></h3>
@@ -222,7 +217,3 @@ pub fn solve_quadratic(a: f64, b: f64, c: f64) -> QuadraticSolution {
     return QuadraticSolution::TwoRealSolutions(x1, x2);
 }
 ```
-
----
-
-## **4 - Conclusion**

@@ -1,6 +1,6 @@
-use std::{env, process};
 use computorv1::constants::parsing_constants::INVALID_ARG_NUMBER;
 use computorv1::math_tools::polynomial::Polynomial;
+use std::{env, process};
 
 fn handle_error(message: &str) -> ! {
     println!("Error: {message}.");
@@ -15,8 +15,8 @@ fn main() {
     }
 
     let equation: &String = &args[1];
-    let mut polynomial: Polynomial = Polynomial::new(equation)
-        .unwrap_or_else(|err| handle_error(&err));
+    let mut polynomial: Polynomial =
+        Polynomial::new(equation).unwrap_or_else(|err| handle_error(&err));
 
     polynomial.solve();
 }
