@@ -10,14 +10,28 @@ pub struct Polynomial {
 
 impl Polynomial {
     pub fn new(equation: &str) -> Result<Self, String> {
-        let coefficients: Vec<f64> = parser::parse_input(equation)?;
-        let degree: usize = coefficients.len() - 1;
+        let mut coefficients: Vec<f64> = parser::parse_input(equation)?;
+        let degree: usize = Self::get_polynomial_degree(&mut coefficients);
 
         Ok(Polynomial {
             degree,
             coefficients,
             solutions: None,
         })
+    }
+
+    pub fn get_polynomial_degree(coefficients: &mut Vec<f64>) -> usize {
+        let mut degree: usize = coefficients.len() - 1;
+
+        while degree > 0 {
+            if coefficients[degree] == 0.0 {
+                degree -= 1;
+                coefficients.pop();
+            } else {
+                return degree;
+            }
+        }
+        degree
     }
 
     pub fn solve(&mut self) {
