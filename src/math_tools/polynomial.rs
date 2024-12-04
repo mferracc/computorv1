@@ -84,7 +84,7 @@ impl Polynomial {
             Some(solutions) => {
                 for solution in solutions {
                     print!(" {} ", solution);
-                    if let Some((numerator, denominator)) = basic::convert_to_irreductible(*solution) {
+                    if let Some((numerator, denominator)) = basic::convert_to_irreducible(*solution) {
                         if denominator != 1 {
                             print!("({}/{})", numerator, denominator);
                         }

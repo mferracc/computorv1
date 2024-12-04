@@ -29,7 +29,7 @@ pub fn gcd(a: i64, b: i64) -> i64 {
     }
 }
 
-pub fn convert_to_irreductible(value: f64) -> Option<(i64, i64)> {
+pub fn convert_to_irreducible(value: f64) -> Option<(i64, i64)> {
     if value.fract() == 0.0 {
         return None;
     }
