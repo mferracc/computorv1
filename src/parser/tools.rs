@@ -1,8 +1,8 @@
+use crate::constants::parsing_constants::{
+    EMPTY_INPUT, INVALID_COEFFICIENT, INVALID_POWER, OPERATORS, PRECISION,
+};
 use core::f64;
 use std::collections::HashMap;
-use crate::constants::parsing_constants::{
-    EMPTY_INPUT, INVALID_COEFFICIENT, INVALID_POWER, OPERATORS, PRECISION
-};
 
 pub fn split_input(input: &str) -> Result<(String, String), String> {
     let cleaned_input: String = input.replace(' ', "");
@@ -20,7 +20,8 @@ pub fn split_input(input: &str) -> Result<(String, String), String> {
 
 fn round_vec(values: Vec<f64>, precision: u32) -> Vec<f64> {
     let factor = 10f64.powi(precision as i32);
-    values.into_iter()
+    values
+        .into_iter()
         .map(|v| (v * factor).round() / factor)
         .collect()
 }

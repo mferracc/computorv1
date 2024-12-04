@@ -48,7 +48,13 @@ fn compute_two_complex_solutions(a: f64, b: f64, sqrt_delta: f64) -> Option<Vec<
     let real_part: f64 = -b / (2.0 * a);
     let imaginary_part: f64 = sqrt_delta / (2.0 * a);
     println!("∆ < 0 => Two complex solutions:");
-    println!("x1 = ({:.} - i√-∆) / (2 * {:.}) = {:.} + i * {:.}", -b, a, real_part, imaginary_part);
-    println!("x2 = ({:.} + i√-∆) / (2 * {:.}) = {:.} - i * {:.}", -b, a, real_part, imaginary_part);
+    println!(
+        "x1 = ({:.} - i√-∆) / (2 * {:.}) = {:.} + i * {:.}",
+        -b, a, real_part, imaginary_part
+    );
+    println!(
+        "x2 = ({:.} + i√-∆) / (2 * {:.}) = {:.} - i * {:.}",
+        -b, a, real_part, imaginary_part
+    );
     Some(vec![real_part, imaginary_part])
 }

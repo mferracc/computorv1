@@ -18,7 +18,7 @@ impl Polynomial {
             degree,
             coefficients,
             solutions: None,
-            discriminant: 0.0
+            discriminant: 0.0,
         })
     }
 

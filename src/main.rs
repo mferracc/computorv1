@@ -1,7 +1,7 @@
 use computorv1::constants::parsing_constants::INVALID_ARG_NUMBER;
+use computorv1::display::display_polynomial;
 use computorv1::math_tools::polynomial::Polynomial;
 use std::{env, process};
-use computorv1::display::display_polynomial;
 
 fn handle_error(message: &str) -> ! {
     println!("Error: {message}.");

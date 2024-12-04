@@ -58,11 +58,13 @@ fn display_complex_solutions(solutions: &[f64]) {
     let real_part: f64 = solutions[0];
     let imaginary_part: f64 = solutions[1];
 
-    println!("{} + i * {} and {} - i * {}", real_part, imaginary_part, real_part, imaginary_part);
+    println!(
+        "{} + i * {} and {} - i * {}",
+        real_part, imaginary_part, real_part, imaginary_part
+    );
 }
 
 fn display_real_solutions(solutions: &[f64]) {
-
     for solution in solutions {
         print!(" {} ", solution);
         if let Some((numerator, denominator)) = basic::convert_to_irreducible(*solution) {

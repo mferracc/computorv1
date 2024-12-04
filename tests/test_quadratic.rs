@@ -1,3 +1,5 @@
+#![allow(clippy::clone_on_copy)]
+
 #[cfg(test)]
 mod tests {
     use computorv1::solvers::quadratic::solve_quadratic;
@@ -66,7 +68,11 @@ mod tests {
             if let Some(sols) = solutions {
                 assert_eq!(sols.len(), exp.len(), "Expected one solution.");
                 for expected_sol in &exp {
-                    assert!(sols.contains(expected_sol), "Expected solution: {} (got {})", expected_sol, sols[0]);
+                    assert!(
+                        sols.contains(expected_sol),
+                        "Expected solution: {} (got {})",
+                        expected_sol, sols[0]
+                    );
                 }
             } else {
                 panic!("Expected a solution, but got None.");
@@ -120,9 +126,7 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(
-        expected = "Wrong solver used."
-    )]
+    #[should_panic(expected = "Wrong solver used.")]
     fn test_panic_on_zero_a() {
         solve_quadratic(&[1.0, 2.0, 0.0]);
     }
