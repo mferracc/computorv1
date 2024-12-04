@@ -3,7 +3,7 @@ mod tests {
     use computorv1::solvers::quadratic::solve_quadratic;
 
     #[test]
-    fn test_no_solution() {
+    fn test_no_real_solutions() {
         let polynomials: Vec<Vec<f64>> = vec![
             vec![1.0, 0.0, 1.0],
             vec![4.0, 0.0, 2.0],
@@ -22,9 +22,15 @@ mod tests {
             vec![3.0, 2.0, 1.0],
         ];
 
-        for poly in polynomials {
+        for poly in polynomials.into_iter() {
             let solutions: Option<Vec<f64>> = solve_quadratic(&poly);
-            assert!(matches!(solutions, None));
+
+            if let Some(solutions) = solutions {
+                assert_eq!(solutions.len(), 2);
+                assert!(solutions[1] > 0.0)
+            } else {
+                panic!("Expected complex solutions, but got None.");
+            }
         }
     }
 
@@ -98,7 +104,7 @@ mod tests {
             let solutions: Option<Vec<f64>> = solve_quadratic(&poly);
 
             if let Some(sols) = solutions {
-                assert_eq!(sols.len(), exp.len(), "Expected two solutions.");
+                assert_eq!(sols.len(), exp.len(), "Expected two real solutions.");
                 for expected_sol in &exp {
                     assert!(
                         sols.contains(expected_sol),
@@ -108,7 +114,7 @@ mod tests {
                     );
                 }
             } else {
-                panic!("Expected two solutions, but got None.");
+                panic!("Expected two real solutions, but got None.");
             }
         }
     }
