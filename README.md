@@ -2,7 +2,7 @@
 
 This project is about building a **polynomial equation solver** that can handle linear and quadratic equations.
 
-## **Usage
+## Usage
 ```
 make
 ./computorv1 "X^2 + 4*X - 9"
