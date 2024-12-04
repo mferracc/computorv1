@@ -1,3 +1,4 @@
+use crate::math_tools::basic;
 use crate::parser;
 use crate::solvers::linear::solve_linear;
 use crate::solvers::quadratic::solve_quadratic;
@@ -83,6 +84,11 @@ impl Polynomial {
             Some(solutions) => {
                 for solution in solutions {
                     print!(" {} ", solution);
+                    if let Some((numerator, denominator)) = basic::convert_to_irreducible(*solution) {
+                        if denominator != 1 {
+                            print!("({}/{})", numerator, denominator);
+                        }
+                    }
                 }
                 println!();
             }
