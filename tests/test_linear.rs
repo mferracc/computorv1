@@ -29,6 +29,6 @@ mod tests {
 
     #[test]
     fn test_edge_case_small_value() {
-    assert_eq!(solve_linear(&[1e-10, 1e-10]), Some(vec![-1.0]));
+        assert_eq!(solve_linear(&[1e-10, 1e-10]), Some(vec![-1.0]));
     }
 }

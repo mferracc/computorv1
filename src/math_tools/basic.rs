@@ -1,11 +1,11 @@
 use crate::constants::math_tools_constants::{FRACT_PRECISION, TOLERANCE};
 
 /// Compute the value of the square root using the Babylonian method (or Newton method).
-pub fn square_root(value: f64) -> Option<f64> {
+pub fn square_root(value: f64) -> f64 {
     if value < 0.0 {
-        return None;
+        panic!("Error: square_root called with negative value.");
     } else if value == 0.0 {
-        return Some(0.0);
+        return 0.0;
     }
 
     let value: f64 = value;
@@ -15,7 +15,7 @@ pub fn square_root(value: f64) -> Option<f64> {
         let next_guess: f64 = (guess + value / guess) / 2.0;
 
         if (next_guess - guess).abs() < TOLERANCE {
-            return Some(next_guess);
+            return next_guess;
         }
         guess = next_guess;
     }
@@ -36,16 +36,13 @@ pub fn convert_to_irreducible(value: f64) -> Option<(i64, i64)> {
 
     let (numerator, denominator): (i64, i64) = (
         (value * FRACT_PRECISION as f64).round() as i64,
-        FRACT_PRECISION
+        FRACT_PRECISION,
     );
-
 
     let divisor: i64 = gcd(numerator, denominator);
 
-    let (reduced_numerator, reduced_denominator): (i64, i64) = (
-        numerator / divisor,
-        denominator / divisor
-    );
+    let (reduced_numerator, reduced_denominator): (i64, i64) =
+        (numerator / divisor, denominator / divisor);
 
     if reduced_denominator < 0 {
         return Some((-reduced_numerator, -reduced_denominator));

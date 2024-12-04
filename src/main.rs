@@ -1,4 +1,5 @@
 use computorv1::constants::parsing_constants::INVALID_ARG_NUMBER;
+use computorv1::display::display_polynomial;
 use computorv1::math_tools::polynomial::Polynomial;
 use std::{env, process};
 
@@ -19,4 +20,6 @@ fn main() {
         Polynomial::new(equation).unwrap_or_else(|err| handle_error(&err));
 
     polynomial.solve();
+
+    display_polynomial::display_solved_polynomial(&polynomial);
 }
