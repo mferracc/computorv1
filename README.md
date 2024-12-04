@@ -1,4 +1,4 @@
-# **Solving Polynomial Equations**
+# Solving Polynomial Equations**
 
 This project is about building a **polynomial equation solver** that can handle linear and quadratic equations.
 
