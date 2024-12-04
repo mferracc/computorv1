@@ -8,7 +8,6 @@ pub fn display_solved_polynomial(polynomial: &Polynomial) {
 }
 
 /// Private part
-
 fn display_reduced_form(polynomial: &Polynomial) {
     let mut terms: Vec<String> = Vec::new();
 
@@ -55,14 +54,14 @@ fn display_solutions(polynomial: &Polynomial) {
     }
 }
 
-fn display_complex_solutions(solutions: &Vec<f64>) {
+fn display_complex_solutions(solutions: &[f64]) {
     let real_part: f64 = solutions[0];
     let imaginary_part: f64 = solutions[1];
 
     println!("{} + i * {} and {} - i * {}", real_part, imaginary_part, real_part, imaginary_part);
 }
 
-fn display_real_solutions(solutions: &Vec<f64>) {
+fn display_real_solutions(solutions: &[f64]) {
 
     for solution in solutions {
         print!(" {} ", solution);
