@@ -71,7 +71,8 @@ mod tests {
                     assert!(
                         sols.contains(expected_sol),
                         "Expected solution: {} (got {})",
-                        expected_sol, sols[0]
+                        expected_sol,
+                        sols[0]
                     );
                 }
             } else {
